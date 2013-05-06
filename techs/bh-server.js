@@ -1,5 +1,3 @@
-var fs = require('fs');
-
 module.exports = require('enb/lib/build-flow').create()
     .name('bh-server')
     .target('target', '?.bemhtml.js')
@@ -28,7 +26,8 @@ module.exports = require('enb/lib/build-flow').create()
             bhFiles.map(function(file) {
                 return buildRequire(file.fullname, '', '(bh)');
             }).join('\n'),
-            'module.exports = bh;'
+            'module.exports = bh;',
+            'bh.BEMHTML = { apply: function(bemjson) { return bh.apply(bemjson); } };'
         ].join('\n');
     })
     .createTech();

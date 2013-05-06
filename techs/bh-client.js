@@ -1,5 +1,4 @@
-var fs = require('fs'),
-    Vow = require('vow'),
+var Vow = require('vow'),
     vowFs = require('vow-fs'),
     bhClientProcessor = require('../lib/bh-client-processor');
 
