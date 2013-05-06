@@ -18,8 +18,8 @@ BH — это BEMJSON-процессор. Его главная цель — п�
 
 Скорость обработки BEMJSON на примере беты Яндекс.Карт (1000 итераций).
 ```javascript
+BH - 865ms (1156 times per second)
 bemhtml - 3103ms (322 times per second)
-bh - 865ms (1156 times per second)
 BEM.HTML - 1356ms (737 times per second)
 ```
 
