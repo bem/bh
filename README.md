@@ -59,7 +59,7 @@ module.exports = function(bh) {
 Преобразования
 --------------
 
-Функции для работы (**матчеры**) с BEMJSON объявляются через метод `match`. В теле функций описывается логика преобразования BEMJSON.
+Функции для работы с BEMJSON ( **матчеры** ) объявляются через метод `match`. В теле функций описывается логика преобразования BEMJSON.
 
 Например, зададим блоку `button` тег `button`, а блоку `input` тег `input`:
 
@@ -157,5 +157,111 @@ bh.match('button', function(ctx) {
         elem: 'content',
         content: ctx.content
     };
+});
+```
+
+Добавим элемент `before` в начало, а `after` в конец содержимого блока `header`:
+
+```javascript
+bh.match('header', function(ctx) {
+    ctx.content = [
+        { elem: 'before' },
+        ctx.content,
+        { elem: 'after' }
+    ];
+});
+```
+
+Добавим блок `before-button` перед блоком `button`:
+
+```javascript
+bh.match('button', function(ctx) {
+    return [
+        { block: 'before-button' },
+        ctx
+    ];
+});
+```
+
+Утилиты
+=======
+
+В `bh.utils` содержится ряд вспомогательных методов для работы с BEMJSON:
+
+bh.utils.position()
+-------------------
+bh.utils.isFirst()
+-------------------
+bh.utils.isLast()
+-------------------
+
+**bh.utils.position()** возвращает позицию текущего bemjson-элемента в рамках родительского.
+**bh.utils.isFirst()** возвращает true, если текущий bemjson-элемент первый в рамках родительского bemjson-элемента.
+**bh.utils.isLast()** возвращает true, если текущий bemjson-элемент последний в рамках родительского bemjson-элемента.
+
+Пример:
+```javascript
+bh.match('list__item', function(ctx) {
+    ctx.mods.pos = bh.utils.position();
+    if (bh.utils.isFirst()) {
+        ctx.mods.first = 'yes';
+    }
+    if (bh.utils.isLast()) {
+        ctx.mods.last = 'yes';
+    }
+});
+```
+
+bh.utils.extend()
+-----------------
+
+Аналог функции `extend` в jQuery.
+
+bh.utils.apply(ctx)
+-------------------
+
+Выполняет преобразования для переданного bemjson-элемента. Может понадобиться, например, чтобы добавить элемент в самый конец содержимого, если в базовых шаблонах в конец содержимого добавляются другие элементы.
+
+**ВАЖНО**: Эта функция может работать медленно, по возможности избегайте ее.
+
+Пример:
+
+```javascript
+bh.match('header', function(ctx) {
+   ctx.content = [
+       ctx.content,
+       { elem: 'under' }
+   ];
+});
+
+bh.match('header_float_yes', function(ctx) {
+   bh.utils.apply(ctx);
+   ctx.content = [
+       ctx.content,
+       { elem: 'clear' }
+   ];
+});
+```
+
+bh.utils.generateId()
+---------------------
+
+Возвращает уникальный идентификатор. Может использоваться, например, чтобы задать соответствие между `label` и `input`.
+
+bh.utils.tParam(key[, value])
+-----------------------------
+
+Передает параметр вглубь BEMJSON-дерева. Например:
+
+```javascript
+bh.match('input', function() {
+    ctx.content = {
+        elem: 'control'
+    };
+    bh.utils.tParam('value', ctx.value);
+});
+
+bh.match('input__control', function() {
+    ctx.value = bh.utils.tParam('value');
 });
 ```
