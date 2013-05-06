@@ -1,0 +1,21 @@
+{
+    "author" : "Marat Dulin <mdevils@yandex.ru>",
+    "description" : "Faster bemjson -> html transformer.",
+    "name" : "bh",
+    "version" : "0.0.1",
+    "contributors": [
+        {
+            "name": "Marat Dulin",
+            "email": "mdevils@yandex.ru"
+        }
+    ],
+    "peerDependencies": {
+        "enb": ">= 0.7.14",
+        "inherit": "*",
+        "vow": "*",
+        "vow-fs": "*"
+    },
+    "engines": {
+        "node": ">= 0.8.0"
+    }
+}
