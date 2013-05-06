@@ -196,13 +196,45 @@ bh.match('button', function(ctx) {
 Окей, вы все это прочитали, но остались непреклонны?
 
 ```javascript
+bh.match('corners', function(ctx) {
+    ctx.content = [
+        ctx.content,
+        { elem: 'tl' },
+        { elem: 'tr' },
+        { elem: 'bl' },
+        { elem: 'br' }
+    ];
+});
+
 bh.match('button', function(ctx) {
-    ctx.tag = 'input';
+    ctx.block = 'corners';
     bh.utils.apply(ctx);
-    ctx.tag = 'button';
+    ctx.block = 'button';
+    ctx.mix.push({ block: 'corners' });
     // Crossing fingers.
 });
 ```
+
+Но лучше использовать другой подход:
+
+```javascript
+bh.lib.corners = bh.lib.corners || {};
+bh.lib.corners.add = function(ctx) {
+    ctx.mix.push({ block: 'corners' });
+    ctx.content = [
+        ctx.content,
+        { block: 'corners', elem: 'tl' },
+        { block: 'corners', elem: 'tr' },
+        { block: 'corners', elem: 'bl' },
+        { block: 'corners', elem: 'br' }
+    ];
+});
+
+bh.match('button', function(ctx) {
+    bh.lib.corners.add(ctx);
+});
+```
+
 
 Утилиты
 =======
