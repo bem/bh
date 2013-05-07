@@ -79,15 +79,15 @@ module.exports = function(bh) {
 };
 ```
 
-Обратите внимание на конструкцию `ctx.tag = ctx.tag || 'button';`. Она написана для того, чтобы не трогать тег в случае, когда он задан явно (в исходном BEMJSON или на другом уровне переопределения).
+Обратите внимание на конструкцию `ctx.tag = ctx.tag || 'button';`. Она написана для того, чтобы не трогать тег в случае, когда он задан явно (в исходном BEMJSON или на другом уровне переопределения). Такой подход важен, если вы разработчик библиотеки базовых блоков.
 
 Теперь нам нужна псевдо-кнопка. То есть, если у кнопки модификатор `pseudo` равен `yes`, то нужен тег `a` и атрибут `role="button"`:
 
 ```javascript
 module.exports = function(bh) {
     bh.match('button_pseudo_yes', function(ctx) {
-        ctx.tag = ctx.tag || 'a';
-        ctx.attrs.role = ctx.attrs.role || 'button';
+        ctx.tag = 'a';
+        ctx.attrs.role = 'button';
     });
 };
 ```
@@ -118,7 +118,7 @@ module.exports = function(bh) {
 
 ```javascript
 bh.match('popup', function(ctx) {
-    ctx.mods.state = ctx.mods.state || 'closed';
+    ctx.mods.state = 'closed';
 });
 ```
 
