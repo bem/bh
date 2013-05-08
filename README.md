@@ -71,23 +71,21 @@ module.exports = function(bh) {
 ```javascript
 module.exports = function(bh) {
     bh.match('button', function(ctx) {
-        ctx.tag = ctx.tag || 'button';
+        ctx.tag('button');
     });
     bh.match('input', function(ctx) {
-        ctx.tag = ctx.tag || 'input';
+        ctx.tag('input');
     });
 };
 ```
-
-Обратите внимание на конструкцию `ctx.tag = ctx.tag || 'button';`. Она написана для того, чтобы не трогать тег в случае, когда он задан явно (в исходном BEMJSON или на другом уровне переопределения). Такой подход важен, если вы разработчик библиотеки базовых блоков.
 
 Теперь нам нужна псевдо-кнопка. То есть, если у кнопки модификатор `pseudo` равен `yes`, то нужен тег `a` и атрибут `role="button"`:
 
 ```javascript
 module.exports = function(bh) {
     bh.match('button_pseudo_yes', function(ctx) {
-        ctx.tag = 'a';
-        ctx.attrs.role = 'button';
+        ctx.tag('a');
+        ctx.attr('role', 'button');
     });
 };
 ```
@@ -118,7 +116,7 @@ module.exports = function(bh) {
 
 ```javascript
 bh.match('popup', function(ctx) {
-    ctx.mods.state = 'closed';
+    ctx.mod('state', 'closed');
 });
 ```
 
@@ -126,7 +124,7 @@ bh.match('popup', function(ctx) {
 
 ```javascript
 bh.match('search-form', function(ctx) {
-    ctx.mix.push({ block: 'form' });
+    ctx.mix([{ block: 'form' }]);
 });
 ```
 
@@ -134,7 +132,7 @@ bh.match('search-form', function(ctx) {
 
 ```javascript
 bh.match('b-page', function(ctx) {
-    ctx.cls = ctx.cls || 'i-ua_js_no i-ua_css_standard';
+    ctx.cls('i-ua_js_no i-ua_css_standard');
 });
 ```
 
@@ -146,10 +144,10 @@ bh.match('b-page', function(ctx) {
 Например, обернем блок `header` блоком `header-wrapper`:
 
 ```javascript
-bh.match('header', function(ctx) {
+bh.match('header', function(ctx, json) {
     return {
         block: 'header-wrapper',
-        content: ctx
+        content: json
     };
 });
 ```
