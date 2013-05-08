@@ -251,6 +251,93 @@ bh.match('button', function(ctx) {
 
 Инстанции класса `Ctx` передаются во все матчеры. Рассмотрим методы класса:
 
+ctx.mod(key[, value[, force]])
+------------------------
+
+Возвращает/устанавливает модификатор в зависимости от аргументов. **force** — задать модификатор даже если он был задан ранее.
+
+```javascript
+bh.match('input', function(ctx) {
+    ctx.mod('native', 'yes');
+});
+
+bh.match('input_islands_yes', function(ctx) {
+    ctx.mod('native', '', true);
+});
+```
+
+ctx.attr(key[, value[, force]])
+------------------------
+
+Возвращает/устанавливает значение атрибута в зависимости от аргументов. **force** — задать значение атрибута даже если оно было задано ранее.
+
+```javascript
+bh.match('input_disabled_yes', function(ctx) {
+    ctx.attr('disabled', 'disabled');
+});
+```
+
+ctx.mix([value[, force]])
+------------------------
+
+Возвращает/устанавливает значение mix в зависимости от аргументов. **force** — задать значение mix даже если оно было задано ранее.
+
+```javascript
+bh.match('button_pseudo_yes', function(ctx) {
+    ctx.mix([{block: 'b-link'}]);
+});
+```
+
+ctx.bem([value[, force]])
+------------------------
+
+Возвращает/устанавливает значение bem в зависимости от аргументов. **force** — задать значение bem даже если оно было задано ранее.
+Если bem имеет значение true, то для элемента не будут генерироваться BEM-классы.
+
+```javascript
+bh.match('meta', function(ctx) {
+    ctx.bem(false);
+});
+```
+
+ctx.js([value[, force]])
+------------------------
+
+Возвращает/устанавливает значение js в зависимости от аргументов. **force** — задать значение js даже если оно было задано ранее.
+Значение js используется для инициализации блоков в браузере через `BEM.DOM.init()`.
+
+```javascript
+bh.match('input', function(ctx) {
+    ctx.js(true);
+});
+```
+
+ctx.content([value[, force]])
+-----------------------------
+
+Возвращает/устанавливает содержимое в зависимости от аргументов. **force** — задать содержимое даже если оно было задано ранее.
+Значение js используется для инициализации блоков в браузере через `BEM.DOM.init()`.
+
+```javascript
+bh.match('input', function(ctx) {
+    ctx.content({ elem: 'control' });
+});
+```
+
+ctx.json()
+----------
+
+Возвращает BEMJSON-элемент в том виде, в котором он присутствует в BEMJSON-дереве.
+
+```javascript
+bh.match('input', function(ctx) {
+    return {
+        elem: 'wrapper',
+        content: ctx.json()
+    };
+});
+```
+
 ctx.position()
 --------------
 ctx.isFirst()
@@ -317,14 +404,14 @@ ctx.tParam(key[, value])
 Передает параметр вглубь BEMJSON-дерева. Например:
 
 ```javascript
-bh.match('input', function() {
+bh.match('input', function(ctx) {
     ctx.content({
         elem: 'control'
     }, true);
     ctx.tParam('value', ctx.param('value'));
 });
 
-bh.match('input__control', function() {
+bh.match('input__control', function(ctx) {
     ctx.attr('value', ctx.tParam('value'));
 });
 ```
