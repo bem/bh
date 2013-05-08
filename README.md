@@ -396,7 +396,7 @@ bh.match('header', function(ctx) {
 });
 
 bh.match('header_float_yes', function(ctx) {
-   bh.utils.apply(ctx.json());
+   ctx.apply(ctx.json());
    ctx.content([
        ctx.content(),
        { elem: 'clear' }
