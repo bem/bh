@@ -139,15 +139,15 @@ bh.match('b-page', function(ctx) {
 Преобразование BEMJSON-дерева
 -----------------------------
 
-Кроме модификации элемента, функция-преобразователь может вернуть новый BEMJSON.
+Кроме модификации элемента, функция-преобразователь может вернуть новый BEMJSON. Здесь мы воспользуемся методами `ctx.json()` (возвращает текущий элемент BEMJSON "как есть") и `ctx.content()` (возвращает или устанавливает контент).
 
 Например, обернем блок `header` блоком `header-wrapper`:
 
 ```javascript
-bh.match('header', function(ctx, json) {
+bh.match('header', function(ctx) {
     return {
         block: 'header-wrapper',
-        content: json
+        content: ctx.json()
     };
 });
 ```
@@ -156,22 +156,24 @@ bh.match('header', function(ctx, json) {
 
 ```javascript
 bh.match('button', function(ctx) {
-    ctx.content = {
+    ctx.content({
         elem: 'content',
-        content: ctx.content
-    };
+        content: ctx.content()
+    }, true);
 });
 ```
+
+Метод `ctx.content` принимает первым аргументом BEMJSON, который надо выставить для содержимого, а вторым — флаг force (выставить содержимое даже если оно уже существует).
 
 Добавим элемент `before` в начало, а `after` в конец содержимого блока `header`:
 
 ```javascript
 bh.match('header', function(ctx) {
-    ctx.content = [
+    ctx.content([
         { elem: 'before' },
-        ctx.content,
+        ctx.content(),
         { elem: 'after' }
-    ];
+    ], true);
 });
 ```
 
@@ -181,7 +183,7 @@ bh.match('header', function(ctx) {
 bh.match('button', function(ctx) {
     return [
         { block: 'before-button' },
-        ctx
+        ctx.json()
     ];
 });
 ```
@@ -195,20 +197,20 @@ bh.match('button', function(ctx) {
 
 ```javascript
 bh.match('corners', function(ctx) {
-    ctx.content = [
-        ctx.content,
+    ctx.content([
+        ctx.content(),
         { elem: 'tl' },
         { elem: 'tr' },
         { elem: 'bl' },
         { elem: 'br' }
-    ];
+    ], true);
 });
 
 bh.match('button', function(ctx) {
-    ctx.block = 'corners';
-    bh.utils.apply(ctx);
-    ctx.block = 'button';
-    ctx.mix.push({ block: 'corners' });
+    ctx.param('block', 'corners', true);
+    bh.utils.apply(ctx.json());
+    ctx.param('block', 'button', true);
+    ctx.mix([{ block: 'corners' }]);
     // Crossing fingers.
 });
 ```
@@ -218,14 +220,14 @@ bh.match('button', function(ctx) {
 ```javascript
 bh.lib.corners = bh.lib.corners || {};
 bh.lib.corners.add = function(ctx) {
-    ctx.mix.push({ block: 'corners' });
-    ctx.content = [
-        ctx.content,
+    ctx.mix([{ block: 'corners' }]);
+    ctx.content([
+        ctx.content(),
         { block: 'corners', elem: 'tl' },
         { block: 'corners', elem: 'tr' },
         { block: 'corners', elem: 'bl' },
         { block: 'corners', elem: 'br' }
-    ];
+    ], true);
 });
 
 bh.match('button', function(ctx) {
