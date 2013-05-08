@@ -66,6 +66,16 @@ module.exports = function(bh) {
 
 Функции для работы с BEMJSON ( **матчеры** ) объявляются через метод `match`. В теле функций описывается логика преобразования BEMJSON.
 
+Синтаксис:
+
+```javascript
+void bh.match({String} expression, function({Ctx} ctx) {
+    //.. actions
+});
+```
+
+Ниже в этом документе можно найти перечень методов класса Ctx. Дальше пойдем по примерам.
+
 Например, зададим блоку `button` тег `button`, а блоку `input` тег `input`:
 
 ```javascript
@@ -236,42 +246,42 @@ bh.match('button', function(ctx) {
 ```
 
 
-Утилиты
-=======
+Класс Ctx
+=========
 
-В `bh.utils` содержится ряд вспомогательных методов для работы с BEMJSON:
+Инстанции класса `Ctx` передаются во все матчеры. Рассмотрим методы класса:
 
-bh.utils.position()
--------------------
-bh.utils.isFirst()
--------------------
-bh.utils.isLast()
--------------------
+ctx.position()
+--------------
+ctx.isFirst()
+-------------
+ctx.isLast()
+------------
 
-**bh.utils.position()** возвращает позицию текущего bemjson-элемента в рамках родительского.
-**bh.utils.isFirst()** возвращает true, если текущий bemjson-элемент первый в рамках родительского bemjson-элемента.
-**bh.utils.isLast()** возвращает true, если текущий bemjson-элемент последний в рамках родительского bemjson-элемента.
+**ctx.position()** возвращает позицию текущего bemjson-элемента в рамках родительского.
+**ctx.isFirst()** возвращает true, если текущий bemjson-элемент первый в рамках родительского bemjson-элемента.
+**ctx.isLast()** возвращает true, если текущий bemjson-элемент последний в рамках родительского bemjson-элемента.
 
 Пример:
 ```javascript
 bh.match('list__item', function(ctx) {
-    ctx.mods.pos = bh.utils.position();
-    if (bh.utils.isFirst()) {
-        ctx.mods.first = 'yes';
+    ctx.mod('pos', ctx.position());
+    if (ctx.isFirst()) {
+        ctx.mod('first', 'yes');
     }
-    if (bh.utils.isLast()) {
-        ctx.mods.last = 'yes';
+    if (ctx.isLast()) {
+        ctx.mod('last', 'yes');
     }
 });
 ```
 
-bh.utils.extend()
------------------
+ctx.extend()
+------------
 
 Аналог функции `extend` в jQuery.
 
-bh.utils.apply(ctx)
--------------------
+ctx.apply(json)
+---------------
 
 Выполняет преобразования для переданного bemjson-элемента. Может понадобиться, например, чтобы добавить элемент в самый конец содержимого, если в базовых шаблонах в конец содержимого добавляются другие элементы.
 
@@ -281,40 +291,40 @@ bh.utils.apply(ctx)
 
 ```javascript
 bh.match('header', function(ctx) {
-   ctx.content = [
-       ctx.content,
+   ctx.content([
+       ctx.content(),
        { elem: 'under' }
-   ];
+   ], true);
 });
 
 bh.match('header_float_yes', function(ctx) {
-   bh.utils.apply(ctx);
-   ctx.content = [
-       ctx.content,
+   bh.utils.apply(ctx.json());
+   ctx.content([
+       ctx.content(),
        { elem: 'clear' }
-   ];
+   ], true);
 });
 ```
 
-bh.utils.generateId()
----------------------
+ctx.generateId()
+----------------
 
 Возвращает уникальный идентификатор. Может использоваться, например, чтобы задать соответствие между `label` и `input`.
 
-bh.utils.tParam(key[, value])
------------------------------
+ctx.tParam(key[, value])
+------------------------
 
 Передает параметр вглубь BEMJSON-дерева. Например:
 
 ```javascript
 bh.match('input', function() {
-    ctx.content = {
+    ctx.content({
         elem: 'control'
-    };
-    bh.utils.tParam('value', ctx.value);
+    }, true);
+    ctx.tParam('value', ctx.param('value'));
 });
 
 bh.match('input__control', function() {
-    ctx.value = bh.utils.tParam('value');
+    ctx.attr('value', ctx.tParam('value'));
 });
 ```
