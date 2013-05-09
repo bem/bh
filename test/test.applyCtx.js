@@ -58,19 +58,30 @@ describe('ctx.applyCtx()', function() {
             '<div class="button__after"></div>'
         );
     });
-    it('should return valid processed element with no block name', function() {
+    it('should apply another matcher', function() {
+        bh.match('corners', function(ctx) {
+            ctx.content([
+                ctx.content(),
+                { elem: 'tl' },
+                { elem: 'tr' },
+                { elem: 'bl' },
+                { elem: 'br' }
+            ], true);
+        });
         bh.match('button', function(ctx) {
-            var inner = ctx.apply({ elem: 'inner' });
-            inner.tag.should.equal('span');
-            ctx.content(inner);
+            ctx.tag('button');
+            ctx.mix([{block: 'corners' }]);
+            ctx.applyCtx({ block: 'corners' });
         });
-        bh.match('button__inner', function(ctx) {
-            ctx.tag('span');
-        });
-        bh.apply({ block: 'button' }).should.equal(
-            '<div class="button">' +
-                '<span class="button__inner"></span>' +
-            '</div>'
+        bh.apply({ block: 'button', content: 'Hello' }).should.equal(
+            '<button class="button corners">' +
+                'Hello' +
+                '<div class="corners__tl"></div>' +
+                '<div class="corners__tr"></div>' +
+                '<div class="corners__bl"></div>' +
+                '<div class="corners__br"></div>' +
+            '</button>'
         );
     });
+
 });

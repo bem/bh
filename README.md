@@ -217,9 +217,7 @@ bh.match('corners', function(ctx) {
 });
 
 bh.match('button', function(ctx) {
-    ctx.param('block', 'corners', true);
-    bh.utils.apply(ctx.json());
-    ctx.param('block', 'button', true);
+    ctx.applyCtx({ block: 'corners' });
     ctx.mix([{ block: 'corners' }]);
     // Crossing fingers.
 });
