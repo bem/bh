@@ -34,7 +34,7 @@ module.exports = require('enb/lib/build-flow').create()
                 return sr.join('\n');
             })
         ]).spread(function(bhEngineSource, inputSources) {
-            return bhClientProcessor.build(bhEngineSource, inputSources, dependencies);
+            return bhClientProcessor.buildModule(bhEngineSource, inputSources, dependencies);
         });
     })
     .createTech();
