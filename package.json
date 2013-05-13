@@ -2,7 +2,7 @@
     "author" : "Marat Dulin <mdevils@yandex.ru>",
     "description" : "Faster bemjson -> html transformer.",
     "name" : "bh",
-    "version" : "0.1.2",
+    "version" : "0.1.3",
     "contributors": [
         {
             "name": "Marat Dulin",
