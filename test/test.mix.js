@@ -19,20 +19,20 @@ describe('ctx.mix()', function() {
         });
         bh.apply({ block: 'button' }).should.equal('<div class="button mix"></div>');
     });
-    it('should not override user mix', function() {
+    it('should extend user mix', function() {
         bh.match('button', function(ctx) {
             ctx.mix([{ block: 'mix'}]);
         });
-        bh.apply({ block: 'button', mix: [{ block: 'user-mix'}] }).should.equal('<div class="button user-mix"></div>');
+        bh.apply({ block: 'button', mix: [{ block: 'user-mix'}] }).should.equal('<div class="button user-mix mix"></div>');
     });
-    it('should not override later declarations', function() {
+    it('should extend later declarations', function() {
         bh.match('button', function(ctx) {
             ctx.mix([{ block: 'mix2'}]);
         });
         bh.match('button', function(ctx) {
             ctx.mix([{ block: 'mix1'}]);
         });
-        bh.apply({ block: 'button' }).should.equal('<div class="button mix1"></div>');
+        bh.apply({ block: 'button' }).should.equal('<div class="button mix1 mix2"></div>');
     });
     it('should override later declarations with force flag', function() {
         bh.match('button', function(ctx) {
