@@ -275,6 +275,20 @@ bh.match('input_islands_yes', function(ctx) {
 });
 ```
 
+ctx.mods([values[, force]])
+---------------------------
+
+Возвращает/устанавливает модификаторы в зависимости от аргументов. **force** — задать модификаторы даже если они были заданы ранее.
+
+```javascript
+bh.match('paranja', function(ctx) {
+    ctx.mods({
+        theme: 'normal',
+        state: 'close'
+    });
+});
+```
+
 ctx.attr(key[, value[, force]])
 ------------------------
 
