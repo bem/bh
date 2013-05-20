@@ -23,9 +23,9 @@ BH — это BEMJSON-процессор. Его главная цель — п�
 
 Скорость обработки BEMJSON (1000 итераций).
 ```javascript
-BH - 865ms (1156 times per second)
-bemhtml - 3103ms (322 times per second)
-BEM.HTML - 1356ms (737 times per second)
+bemhtml - 3184ms (314 times per second)
+bh - 1214ms (824 times per second)
+BEM.HTML - 1427ms (701 times per second)
 ```
 
 Вес результирующего файла (сжатого):
