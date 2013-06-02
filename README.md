@@ -108,13 +108,13 @@ module.exports = function(bh) {
 Рассмотрим синтаксис строки матчинга для функций преобразования:
 
 ```javascript
-'block[_blockModName_blockModVal][__elemName][_elemModName_elemModVal]'
+'block[_blockModName[_blockModVal]][__elemName][_elemModName[_elemModVal]]'
 ```
 
 По-русски:
 
 ```javascript
-'блок[_имяМодификатораБлока_значениеМодификатораБлока][__имяЭлемента][_имяМодификатораЭлемента_значениеМодификатораЭлемента]'
+'блок[_имяМодификатораБлока[_значениеМодификатораБлока]][__имяЭлемента][_имяМодификатораЭлемента[_значениеМодификатораЭлемента]]'
 ```
 
 (В квадратных скобках необязательные параметры)
@@ -209,10 +209,10 @@ bh.match('button', function(ctx) {
 bh.match('corners', function(ctx) {
     ctx.content([
         ctx.content(),
-        { elem: 'tl' },
-        { elem: 'tr' },
-        { elem: 'bl' },
-        { elem: 'br' }
+        { block: 'corners', elem: 'tl' },
+        { block: 'corners', elem: 'tr' },
+        { block: 'corners', elem: 'bl' },
+        { block: 'corners', elem: 'br' }
     ], true);
 });
 
@@ -411,6 +411,23 @@ bh.match('header_float_yes', function(ctx) {
        ctx.content(),
        { elem: 'clear' }
    ], true);
+});
+```
+
+ctx.stop()
+----------
+
+Останавливает выполнение прочих матчеров для данного bemjson-элемента.
+
+Пример:
+
+```javascript
+bh.match('button', function(ctx) {
+    ctx.tag('button', true);
+});
+bh.match('button', function(ctx) {
+    ctx.tag('span');
+    ctx.stop();
 });
 ```
 

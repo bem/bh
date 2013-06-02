@@ -21,7 +21,7 @@ module.exports = require('enb/lib/build-flow').create()
         var dependencies = this._dependencies;
         return Vow.all([
             vowFs.read(this._bhFile, 'utf8').then(function(data) {
-                return bhClientProcessor.processBHEngineSource(data);
+                return data;
             }),
             Vow.all(bhFiles.map(function(file) {
                 return vowFs.read(file.fullname, 'utf8').then(function(data) {

@@ -62,10 +62,10 @@ describe('ctx.applyCtx()', function() {
         bh.match('corners', function(ctx) {
             ctx.content([
                 ctx.content(),
-                { elem: 'tl' },
-                { elem: 'tr' },
-                { elem: 'bl' },
-                { elem: 'br' }
+                { block: 'corners', elem: 'tl' },
+                { block: 'corners', elem: 'tr' },
+                { block: 'corners', elem: 'bl' },
+                { block: 'corners', elem: 'br' }
             ], true);
         });
         bh.match('button', function(ctx) {
