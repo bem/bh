@@ -1,7 +1,7 @@
 var BH = require('../lib/bh');
 require('chai').should();
 
-describe('ctx.applyCtx()', function() {
+describe('ctx.applyBase()', function() {
     var bh;
     beforeEach(function() {
         bh = new BH();
@@ -15,7 +15,7 @@ describe('ctx.applyCtx()', function() {
             ], true);
         });
         bh.match('button', function(ctx) {
-            ctx.applyCtx();
+            ctx.applyBase();
             ctx.content([
                 { elem: 'before' },
                 ctx.content(),
@@ -41,7 +41,7 @@ describe('ctx.applyCtx()', function() {
             ];
         });
         bh.match('button', function(ctx) {
-            ctx.applyCtx();
+            ctx.applyBase();
             return [
                 { elem: 'before' },
                 ctx.json(),
@@ -71,7 +71,7 @@ describe('ctx.applyCtx()', function() {
         bh.match('button', function(ctx) {
             ctx.tag('button');
             ctx.mix([{block: 'corners' }]);
-            ctx.applyCtx({ block: 'corners' });
+            ctx.applyBase({ block: 'corners' });
         });
         bh.apply({ block: 'button', content: 'Hello' }).should.equal(
             '<button class="button corners">' +
