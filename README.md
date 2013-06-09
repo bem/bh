@@ -217,7 +217,7 @@ bh.match('corners', function(ctx) {
 });
 
 bh.match('button', function(ctx) {
-    ctx.applyCtx({ block: 'corners' });
+    ctx.applyBase({ block: 'corners' });
     ctx.mix([{ block: 'corners' }]);
     // Crossing fingers.
 });
@@ -391,6 +391,11 @@ ctx.extend()
 Аналог функции `extend` в jQuery.
 
 ctx.applyCtx()
+-------------
+
+deprecated. Следует использовать `ctx.applyBase()`.
+
+ctx.applyBase()
 ---------------
 
 Выполняет преобразования данного bemjson-элемента остальными матчерами. Может понадобиться, например, чтобы добавить элемент в самый конец содержимого, если в базовых шаблонах в конец содержимого добавляются другие элементы.
@@ -406,7 +411,7 @@ bh.match('header', function(ctx) {
 });
 
 bh.match('header_float_yes', function(ctx) {
-   ctx.applyCtx();
+   ctx.applyBase();
    ctx.content([
        ctx.content(),
        { elem: 'clear' }
