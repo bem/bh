@@ -27,9 +27,6 @@ module.exports = require('enb/lib/build-flow').create()
                 return buildRequire(file.fullname, '', '(bh)');
             }).join('\n'),
             'module.exports = bh;',
-            'if (typeof BEM !== \'undefined\' && typeof BEM.I18N !== \'undefined\') {',
-            '    bh.lib.i18n = bh.lib.i18n || BEM.I18N;',
-            '}',
             'bh.BEMHTML = { apply: function(bemjson) { return bh.apply(bemjson); } };'
         ].join('\n');
     })
