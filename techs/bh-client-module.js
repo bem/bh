@@ -1,9 +1,28 @@
-var Vow = require('vow'),
+/**
+ * bh-client-module
+ * ================
+ * 
+ * Склеивает *bh*-файлы по deps'ам с помощью набора `require` в виде `?.bemhtml.client.js`.
+ * Предназначен для сборки клиентского BH-кода.
+ * Использует модульную обертку.
+ * 
+ * **Опции**
+ * 
+ * * *String* **target** — Результирующий таргет. По умолчанию — `?.bemhtml.client.js`.
+ * * *String* **filesTarget** — files-таргет, на основе которого получается список исходных файлов (его предоставляет технология `files`). По умолчанию — `?.files`.
+ * 
+ * **Пример**
+ * 
+ * ```javascript
+ * nodeConfig.addTech(require('bh/techs/bh-client-module'));
+ * ```
+ */
+ var Vow = require('vow'),
     vowFs = require('vow-fs'),
     bhClientProcessor = require('../lib/bh-client-processor');
 
 module.exports = require('enb/lib/build-flow').create()
-    .name('bh-client')
+    .name('bh-client-module')
     .target('target', '?.bemhtml.client.js')
     .defineOption('bhFile', '')
     .defineOption('dependencies', {})
