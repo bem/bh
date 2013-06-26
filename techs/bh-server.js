@@ -1,3 +1,20 @@
+/**
+ * bh-server
+ * =========
+ * 
+ * Склеивает *bh*-файлы по deps'ам с помощью набора `require` в виде `?.bemhtml.js`.
+ * 
+ * **Опции**
+ * 
+ * * *String* **target** — Результирующий таргет. По умолчанию — `?.bemhtml.js`.
+ * * *String* **filesTarget** — files-таргет, на основе которого получается список исходных файлов (его предоставляет технология `files`). По умолчанию — `?.files`.
+ * 
+ * **Пример**
+ * 
+ * ```javascript
+ * nodeConfig.addTech(require('bh/techs/bh-server'));
+ * ```
+ */
 module.exports = require('enb/lib/build-flow').create()
     .name('bh-server')
     .target('target', '?.bemhtml.js')
@@ -13,6 +30,13 @@ module.exports = require('enb/lib/build-flow').create()
     })
     .builder(function(bhFiles) {
         var node = this.node;
+        /**
+         * Генерирует `require`-строку для подключения исходных bh-файлов.
+         * 
+         * @param {String} absPath
+         * @param {String} pre
+         * @param {String} post
+         */
         function buildRequire(absPath, pre, post) {
             var relPath = node.relativePath(absPath);
             return [
