@@ -1,6 +1,5 @@
 {
-    "expr": true,
-    "eqnull": true,
-    "laxbreak": true,
-    "boss": true
+    "evil": true,
+    "boss": true,
+    "eqnull": true
 }

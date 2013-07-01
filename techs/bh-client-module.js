@@ -45,9 +45,9 @@ module.exports = require('enb/lib/build-flow').create()
             Vow.all(bhFiles.map(function(file) {
                 return vowFs.read(file.fullname, 'utf8').then(function(data) {
                     var relPath = node.relativePath(file.fullname);
-                    return '// begin: ' + relPath + '\n'
-                        + bhClientProcessor.process(data) + '\n'
-                        + '// end: ' + relPath + '\n';
+                    return '// begin: ' + relPath + '\n' +
+                        bhClientProcessor.process(data) + '\n' +
+                        '// end: ' + relPath + '\n';
                 });
             })).then(function(sr) {
                 return sr.join('\n');

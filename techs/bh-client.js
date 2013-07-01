@@ -50,9 +50,9 @@ module.exports = require('enb/lib/build-flow').create()
                     /**
                      * Выставляем комментарии о склеенных файлах.
                      */
-                    return '// begin: ' + relPath + '\n'
-                        + bhClientProcessor.process(data) + '\n'
-                        + '// end: ' + relPath + '\n';
+                    return '// begin: ' + relPath + '\n' +
+                        bhClientProcessor.process(data) + '\n' +
+                        '// end: ' + relPath + '\n';
                 });
             })).then(function(sr) {
                 return sr.join('\n');

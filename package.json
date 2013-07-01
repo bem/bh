@@ -2,7 +2,8 @@
     "author" : "Marat Dulin <mdevils@yandex.ru>",
     "description" : "Faster bemjson -> html transformer.",
     "name" : "bh",
-    "version" : "0.1.13",
+    "version" : "0.1.14",
+    "repository" : "https://github.com/enb-make/bh",
     "contributors": [
         {
             "name": "Marat Dulin",
@@ -24,12 +25,16 @@
     "devDependencies": {
         "mocha": "1.9.0",
         "chai": "1.6.0",
-        "jshint": "2.1.x"
+        "jshint": "2.1.x",
+        "jscs": "0.0.12"
     },
     "engines": {
         "node": ">= 0.8.0"
     },
     "scripts": {
-        "test": "make lint && make test"
+        "test" : "npm run-script jshint && npm run-script check-style && npm run-script unit-test",
+        "jshint": "./node_modules/.bin/jshint .",
+        "unit-test": "./node_modules/.bin/mocha -u bdd -R spec --recursive test",
+        "check-style": "./node_modules/jscs/bin/jscs ."
     }
 }

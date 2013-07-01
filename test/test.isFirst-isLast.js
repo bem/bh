@@ -8,8 +8,12 @@ describe('ctx.isFirst() / ctx.isLast()', function() {
     });
     it('should calc isFirst/isLast', function() {
         bh.match('button__inner', function(ctx) {
-            ctx.isFirst() && ctx.mod('first', 'yes');
-            ctx.isLast() && ctx.mod('last', 'yes');
+            if (ctx.isFirst()) {
+                ctx.mod('first', 'yes');
+            }
+            if (ctx.isLast()) {
+                ctx.mod('last', 'yes');
+            }
         });
         bh.apply({ block: 'button', content: [
             { elem: 'inner' },
@@ -25,8 +29,12 @@ describe('ctx.isFirst() / ctx.isLast()', function() {
     });
     it('should calc isFirst/isLast with array mess', function() {
         bh.match('button__inner', function(ctx) {
-            ctx.isFirst() && ctx.mod('first', 'yes');
-            ctx.isLast() && ctx.mod('last', 'yes');
+            if (ctx.isFirst()) {
+                ctx.mod('first', 'yes');
+            }
+            if (ctx.isLast()) {
+                ctx.mod('last', 'yes');
+            }
         });
         bh.apply({ block: 'button', content: [
             [ { elem: 'inner' } ],
@@ -41,8 +49,12 @@ describe('ctx.isFirst() / ctx.isLast()', function() {
     });
     it('should calc isFirst/isLast for single element', function() {
         bh.match('button__inner', function(ctx) {
-            ctx.isFirst() && ctx.mod('first', 'yes');
-            ctx.isLast() && ctx.mod('last', 'yes');
+            if (ctx.isFirst()) {
+                ctx.mod('first', 'yes');
+            }
+            if (ctx.isLast()) {
+                ctx.mod('last', 'yes');
+            }
         });
         bh.apply({ block: 'button', content: { elem: 'inner' } }).should.equal(
             '<div class="button">' +
