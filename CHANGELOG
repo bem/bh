@@ -1,3 +1,7 @@
+Версия 0.1.15:
+ * Метод `processBemjson` переименован в `processBemJson`. Старое имя помечено `@deprecated`.
+ * Метод `applyTemplates` — применение шаблонов после изменения контекста.
+
 Версия 0.1.14:
  * Метод setOptions для выставления опций.
  * Опции: jsAttrName, jsAttrScheme.
