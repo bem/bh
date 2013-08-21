@@ -36,6 +36,12 @@ describe('ctx.content()', function() {
         });
         bh.apply({ block: 'button' }).should.equal('<div class="button">123</div>');
     });
+    it('should set bemjson zero-numeric content', function() {
+        bh.match('button', function(ctx) {
+            ctx.content(0);
+        });
+        bh.apply({ block: 'button' }).should.equal('<div class="button">0</div>');
+    });
     it('should not override user content', function() {
         bh.match('button', function(ctx) {
             ctx.content({ elem: 'text' });
