@@ -19,6 +19,18 @@ describe('ctx.mix()', function() {
         });
         bh.apply({ block: 'button' }).should.equal('<div class="button mix"></div>');
     });
+    it('should set single mix', function() {
+        bh.match('button', function(ctx) {
+            ctx.mix({ block: 'mix'});
+        });
+        bh.apply({ block: 'button' }).should.equal('<div class="button mix"></div>');
+    });
+    it('should extend single mix', function() {
+        bh.match('button', function(ctx) {
+            ctx.mix({ block: 'mix2'});
+        });
+        bh.apply({ block: 'button', mix: {block: 'mix1'} }).should.equal('<div class="button mix1 mix2"></div>');
+    });
     it('should extend user mix', function() {
         bh.match('button', function(ctx) {
             ctx.mix([{ block: 'mix'}]);
