@@ -1,17 +1,22 @@
 /**
  * bh-client
  * =========
- * 
+ *
  * Склеивает *bh*-файлы по deps'ам с помощью набора `require` в виде `?.bemhtml.client.js`.
  * Предназначен для сборки клиентского BH-кода.
- * 
+ *
  * **Опции**
- * 
+ *
  * * *String* **target** — Результирующий таргет. По умолчанию — `?.bemhtml.client.js`.
  * * *String* **filesTarget** — files-таргет, на основе которого получается список исходных файлов (его предоставляет технология `files`). По умолчанию — `?.files`.
- * 
+ * * *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `onclick`.
+ * * *String* **jsAttrScheme** — Cхема данных для параметров инициализации. По умолчанию — `js`.
+ * *                             Форматы:
+ * *                                `js` — значение по умолчанию. Получаем `return { ... }`.
+ * *                                `json` — JSON-формат. Получаем `{ ... }`.
+ *
  * **Пример**
- * 
+ *
  * ```javascript
  * nodeConfig.addTech(require('bh/techs/bh-client'));
  * ```
@@ -25,6 +30,8 @@ module.exports = require('enb/lib/build-flow').create()
     .target('target', '?.bemhtml.client.js')
     .defineOption('bhFile', '')
     .defineOption('dependencies', {})
+    .defineOption('jsAttrName', 'onclick')
+    .defineOption('jsAttrScheme', 'js')
     .useFileList(['bh.js'])
     /**
      * Отдельно кэшируем BH-библиотеку.
@@ -40,6 +47,8 @@ module.exports = require('enb/lib/build-flow').create()
     .builder(function(bhFiles) {
         var node = this.node;
         var dependencies = this._dependencies;
+        var jsAttrName = this._jsAttrName;
+        var jsAttrScheme = this._jsAttrScheme;
         return Vow.all([
             vowFs.read(this._bhFile, 'utf8').then(function(data) {
                 return data;
@@ -58,7 +67,7 @@ module.exports = require('enb/lib/build-flow').create()
                 return sr.join('\n');
             })
         ]).spread(function(bhEngineSource, inputSources) {
-            return bhClientProcessor.build(bhEngineSource, inputSources, dependencies);
+            return bhClientProcessor.build(bhEngineSource, inputSources, dependencies, jsAttrName, jsAttrScheme);
         });
     })
     .createTech();
