@@ -1,16 +1,21 @@
 /**
  * bh-server
  * =========
- * 
+ *
  * Склеивает *bh*-файлы по deps'ам с помощью набора `require` в виде `?.bemhtml.js`.
- * 
+ *
  * **Опции**
- * 
+ *
  * * *String* **target** — Результирующий таргет. По умолчанию — `?.bemhtml.js`.
  * * *String* **filesTarget** — files-таргет, на основе которого получается список исходных файлов (его предоставляет технология `files`). По умолчанию — `?.files`.
- * 
+ * * *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `onclick`.
+ * * *String* **jsAttrScheme** — Cхема данных для параметров инициализации. По умолчанию — `js`.
+ * *                             Форматы:
+ * *                                `js` — значение по умолчанию. Получаем `return { ... }`.
+ * *                                `json` — JSON-формат. Получаем `{ ... }`.
+ *
  * **Пример**
- * 
+ *
  * ```javascript
  * nodeConfig.addTech(require('bh/techs/bh-server'));
  * ```
@@ -19,6 +24,8 @@ module.exports = require('enb/lib/build-flow').create()
     .name('bh-server')
     .target('target', '?.bemhtml.js')
     .defineOption('bhFile', '')
+    .defineOption('jsAttrName', 'onclick')
+    .defineOption('jsAttrScheme', 'js')
     .useFileList(['bh.js'])
     .needRebuild(function(cache) {
         this._bhFile = this._bhFile || 'node_modules/bh/lib/bh.js';
@@ -32,7 +39,7 @@ module.exports = require('enb/lib/build-flow').create()
         var node = this.node;
         /**
          * Генерирует `require`-строку для подключения исходных bh-файлов.
-         * 
+         *
          * @param {String} absPath
          * @param {String} pre
          * @param {String} post
@@ -47,6 +54,10 @@ module.exports = require('enb/lib/build-flow').create()
         return [
             buildRequire(this._bhFile, 'var BH = '),
             'var bh = new BH();',
+            'bh.setOptions({',
+                'jsAttrName: \'' + this._jsAttrName + '\',',
+                'jsAttrScheme: \'' + this._jsAttrSheme + '\'',
+            '})',
             bhFiles.map(function(file) {
                 return buildRequire(file.fullname, '', '(bh)');
             }).join('\n'),
