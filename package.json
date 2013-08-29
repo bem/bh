@@ -4,6 +4,7 @@
     "name" : "bh",
     "version" : "0.1.19",
     "repository" : "https://github.com/enb-make/bh",
+    "licence" : "MIT",
     "contributors": [
         {
             "name": "Marat Dulin",
