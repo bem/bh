@@ -56,7 +56,7 @@ module.exports = require('enb/lib/build-flow').create()
             'var bh = new BH();',
             'bh.setOptions({',
                 'jsAttrName: \'' + this._jsAttrName + '\',',
-                'jsAttrScheme: \'' + this._jsAttrSheme + '\'',
+                'jsAttrScheme: \'' + this._jsAttrScheme + '\'',
             '})',
             bhFiles.map(function(file) {
                 return buildRequire(file.fullname, '', '(bh)');
