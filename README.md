@@ -295,6 +295,15 @@ bh.match('input_disabled_yes', function(ctx) {
 });
 ```
 
+*Замечание*: Если необходимо удалить сам аттрибут, а не просто обнулить значение аттрибута, то вторым параметром надо передать `null`:  
+
+```javascript
+bh.match('b-link', function(ctx) {
+    ctx.attr('href', null);
+});
+```
+
+
 ctx.mix([value[, force]])
 ------------------------
 
