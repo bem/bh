@@ -61,5 +61,18 @@ describe('bh.toHtml()', function() {
                 '<a class="button"></a>'
             );
         });
+        it('should not ignore boolean mods', function() {
+            bh.match('button', function(ctx) {
+                ctx.tag('button');
+                ctx.mod('disabled', 'disabled');
+            });
+            bh.match('button', function(ctx) {
+                ctx.mod('visible', false);
+                ctx.mod('disabled', true);
+            });
+            bh.apply({ block: 'button' }).should.equal(
+                '<button class="button button_disabled"></button>'
+            );
+        });
     });
 });
