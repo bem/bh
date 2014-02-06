@@ -303,6 +303,19 @@ bh.match('b-link', function(ctx) {
 });
 ```
 
+ctx.attrs([values[, force]])
+---------------------------
+
+Возвращает/устанавливает атрибуты в зависимости от аргументов. **force** — задать атрибуты даже если они были заданы ранее.
+
+```javascript
+bh.match('input', function(ctx) {
+    ctx.attrs({
+        name: ctx.param('name'),
+        autocomplete: 'off'
+    });
+});
+```
 
 ctx.mix([value[, force]])
 ------------------------
