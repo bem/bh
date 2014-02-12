@@ -13,6 +13,10 @@
         {
             "name" : "Dmitry Filatov",
             "email" : "dfilatov@yandex-team.ru"
+        },
+        {
+            "name" : "Mikhail Troshev",
+            "email" : "mishanga@yandex-team.ru"
         }
     ],
     "peerDependencies": {
