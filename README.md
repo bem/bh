@@ -263,10 +263,12 @@ ctx.mod(key[, value[, force]])
 ```javascript
 bh.match('input', function(ctx) {
     ctx.mod('native', 'yes');
+    ctx.mod('disabled', true);
 });
 
 bh.match('input_islands_yes', function(ctx) {
     ctx.mod('native', '', true);
+    ctx.mod('disabled', false, true);
 });
 ```
 
@@ -279,7 +281,7 @@ ctx.mods([values[, force]])
 bh.match('paranja', function(ctx) {
     ctx.mods({
         theme: 'normal',
-        state: 'close'
+        disabled: true
     });
 });
 ```

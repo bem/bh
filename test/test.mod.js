@@ -10,7 +10,13 @@ describe('ctx.mod()', function() {
         bh.match('component', function(ctx) {
             ctx.mod('type').should.equal('button');
         });
-        bh.apply({ block: 'component', mods: {type: 'button'} });
+        bh.apply({ block: 'component', mods: { type: 'button' } });
+    });
+    it('should return boolean mod', function() {
+        bh.match('component', function(ctx) {
+            ctx.mod('disabled').should.equal(true);
+        });
+        bh.apply({ block: 'component', mods: { disabled: true } });
     });
     it('should set mod', function() {
         bh.match('component', function(ctx) {
@@ -18,11 +24,17 @@ describe('ctx.mod()', function() {
         });
         bh.apply({ block: 'component' }).should.equal('<div class="component component_type_button"></div>');
     });
+    it('should set boolean mod', function() {
+        bh.match('component', function(ctx) {
+            ctx.mod('disabled', true);
+        });
+        bh.apply({ block: 'component' }).should.equal('<div class="component component_disabled"></div>');
+    });
     it('should not override user mod', function() {
         bh.match('component', function(ctx) {
             ctx.mod('type', 'button');
         });
-        bh.apply({ block: 'component', mods: {type: 'link'} }).should.equal('<div class="component component_type_link"></div>');
+        bh.apply({ block: 'component', mods: { type: 'link' } }).should.equal('<div class="component component_type_link"></div>');
     });
     it('should not override later declarations', function() {
         bh.match('component', function(ctx) {
@@ -46,6 +58,6 @@ describe('ctx.mod()', function() {
         bh.match('component', function(ctx) {
             ctx.mod('type', 'button', true);
         });
-        bh.apply({ block: 'component', mods: {type: 'link'} }).should.equal('<div class="component component_type_button"></div>');
+        bh.apply({ block: 'component', mods: { type: 'link' } }).should.equal('<div class="component component_type_button"></div>');
     });
 });
