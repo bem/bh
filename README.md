@@ -64,9 +64,34 @@ module.exports = function(bh) {
 Синтаксис:
 
 ```javascript
-void bh.match({String} expression, function({Ctx} ctx) {
+{BH} bh.match({String} expression, function({Ctx} ctx) {
     //.. actions
 });
+```
+
+Также допустимо использовать несколько матчеров в одном вызове метода `match`.
+
+Синтаксис:
+
+```javascript
+{BH} bh.match({Object} matchers);
+
+```
+
+Где `matchers` представляет собой объект вида:
+
+```javascript
+{
+    {String} expression1 : function({Ctx} ctx) {
+        //.. actions1
+    },
+
+    ...,
+
+    {String} expressionN : function({Ctx} ctx) {
+        //.. actionsN
+    },
+}
 ```
 
 Ниже в этом документе можно найти перечень методов класса Ctx. Дальше пойдем по примерам.
