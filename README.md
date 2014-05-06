@@ -429,6 +429,16 @@ bh.match('list__item', function(ctx) {
 });
 ```
 
+ctx.isSimple()
+------------
+
+Проверяет, что объект является примитивом.
+```javascript
+bh.match('link', function(ctx) {
+    ctx.tag(ctx.isSimple(ctx.content()) ? 'span' : 'div');
+});
+```
+
 ctx.extend()
 ------------
 
