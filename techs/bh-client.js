@@ -21,6 +21,9 @@
  * nodeConfig.addTech(require('bh/techs/bh-client'));
  * ```
  */
+
+console.log('WARNING! `bh/techs` was deprecated! Use `enb-bh` package instead!');
+
  var Vow = require('vow'),
     vowFs = require('vow-fs'),
     bhClientProcessor = require('../lib/bh-client-processor');
@@ -37,6 +40,7 @@ module.exports = require('enb/lib/build-flow').create()
      * Отдельно кэшируем BH-библиотеку.
      */
     .needRebuild(function(cache) {
+        console.log('WARNING! `bh/techs` was deprecated! Use `enb-bh` package instead!');
         this._bhFile = this._bhFile || 'node_modules/bh/lib/bh.js';
         this._bhFile = this.node._root + '/' + this._bhFile;
         return cache.needRebuildFile('bh-file', this._bhFile);
