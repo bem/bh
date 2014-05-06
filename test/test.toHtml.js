@@ -2,6 +2,21 @@ var BH = require('../lib/bh');
 require('chai').should();
 
 describe('bh.toHtml()', function() {
+    describe('tags', function() {
+        var bh;
+        beforeEach(function() {
+            bh = new BH();
+        });
+        it('should return html tag <div> by default', function() {
+            bh.apply({}).should.equal('<div></div>');
+        });
+        it('should return html tag <span>', function() {
+            bh.apply({ tag: 'span' }).should.equal('<span></span>');
+        });
+        it('should return content when `tag` is empty', function() {
+            bh.apply({ tag: false, content: 'label' }).should.equal('label');
+        });
+    });
     describe('attrs', function() {
         var bh;
         beforeEach(function() {

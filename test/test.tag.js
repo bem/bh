@@ -12,6 +12,14 @@ describe('ctx.tag()', function() {
         });
         bh.apply({ block: 'button', tag: 'button' });
     });
+    it('should set empty tag', function() {
+        bh.match('button', function(ctx) {
+            ctx.tag(false);
+        });
+        bh.apply({ block: 'button', content: { block: 'link' } }).should.equal(
+            '<div class="link"></div>'
+        );
+    });
     it('should set html tag', function() {
         bh.match('button', function(ctx) {
             ctx.tag('button');
