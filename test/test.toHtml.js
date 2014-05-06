@@ -90,4 +90,41 @@ describe('bh.toHtml()', function() {
             );
         });
     });
+    describe('mix', function() {
+        var bh;
+        beforeEach(function() {
+            bh = new BH();
+        });
+        it('should set elem mix', function() {
+            bh.match('button', function(ctx) {
+                ctx.mix({ elem: 'mix' });
+            });
+            bh.apply({ block: 'button' }).should.equal('<div class="button button__mix"></div>');
+        });
+        it('should set mods mix', function() {
+            bh.match('button', function(ctx) {
+                ctx.mix({ mods: { disabled: true, theme: 'normal' } });
+            });
+            bh.apply({ block: 'button' }).should.equal('<div class="button button_disabled button_theme_normal"></div>');
+        });
+        it('should set elem mods mix', function() {
+            bh.match('button', function(ctx) {
+                ctx.mix({ elem: 'control', mods: { disabled: true } });
+            });
+            bh.apply({ block: 'button' }).should.equal('<div class="button button__control button__control_disabled"></div>');
+        });
+        it('should set several mixes', function() {
+            bh.match('button', function(ctx) {
+                ctx.mix([
+                    { block: 'link' },
+                    { elem: 'control' },
+                    { mods: { disabled: true } },
+                    { block: 'label', elem: 'first', mods: { color: 'red' } }
+                ]);
+            });
+            bh.apply({ block: 'button' }).should.equal(
+                '<div class="button link button__control button_disabled label__first label__first_color_red"></div>'
+            );
+        });
+    });
 });
