@@ -12,6 +12,10 @@ describe('options', function() {
                 '<div class="button i-bem" onclick="return {&quot;button&quot;:{}};"></div>'
             );
         });
+        it('should return current options', function() {
+            bh.setOptions({ foo: 'bar' });
+            bh.getOptions().foo.should.equal('bar');
+        });
         it('should use js format as default and use jsAttrName option', function() {
             bh.setOptions({
                 jsAttrName: 'ondblclick'

@@ -6,6 +6,12 @@ describe('ctx.attrs()', function() {
     beforeEach(function() {
         bh = new BH();
     });
+    it('should return empty attrs', function() {
+        bh.match('button', function(ctx) {
+            (typeof ctx.attrs()).should.equal('object');
+        });
+        bh.apply({ block: 'button' });
+    });
     it('should return attrs', function() {
         bh.match('button', function(ctx) {
             ctx.attrs().type.should.equal('button');
