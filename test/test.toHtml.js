@@ -95,6 +95,12 @@ describe('bh.toHtml()', function() {
         beforeEach(function() {
             bh = new BH();
         });
+        it('should not set undefined mix', function() {
+            bh.apply({
+                block: 'button',
+                mix: [null, undefined]
+            }).should.equal('<div class="button"></div>');
+        });
         it('should set elem mix', function() {
             bh.match('button', function(ctx) {
                 ctx.mix({ elem: 'mix' });
