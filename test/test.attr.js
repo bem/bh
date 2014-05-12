@@ -10,7 +10,13 @@ describe('ctx.attr()', function() {
         bh.match('button', function(ctx) {
             ctx.attr('type').should.equal('button');
         });
-        bh.apply({ block: 'button', attrs: {type: 'button'} });
+        bh.apply({ block: 'button', attrs: { type: 'button' } });
+    });
+    it('should return undefined attr', function() {
+        bh.match('button', function(ctx) {
+            (typeof ctx.attr('type')).should.equal('undefined');
+        });
+        bh.apply({ block: 'button', attrs: { disabled: 'disabled' } });
     });
     it('should set attr', function() {
         bh.match('checkbox', function(ctx) {
@@ -25,7 +31,7 @@ describe('ctx.attr()', function() {
         bh.match('button', function(ctx) {
             ctx.attr('type', 'button');
         });
-        bh.apply({ block: 'button', attrs: {type: 'link'} }).should.equal('<div class="button" type="link"></div>');
+        bh.apply({ block: 'button', attrs: { type: 'link' } }).should.equal('<div class="button" type="link"></div>');
     });
     it('should not override later declarations', function() {
         bh.match('button', function(ctx) {
@@ -49,6 +55,6 @@ describe('ctx.attr()', function() {
         bh.match('button', function(ctx) {
             ctx.attr('type', 'button', true);
         });
-        bh.apply({ block: 'button', attrs: {type: 'link'} }).should.equal('<div class="button" type="button"></div>');
+        bh.apply({ block: 'button', attrs: { type: 'link' } }).should.equal('<div class="button" type="button"></div>');
     });
 });
