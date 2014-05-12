@@ -154,7 +154,7 @@ bh.match('popup', function(ctx) {
 
 ```javascript
 bh.match('search-form', function(ctx) {
-    ctx.mix([{ block: 'form' }]);
+    ctx.mix({ block: 'form' });
 });
 ```
 
@@ -238,7 +238,7 @@ bh.match('corners', function(ctx) {
 
 bh.match('button', function(ctx) {
     ctx.applyBase({ block: 'corners' });
-    ctx.mix([{ block: 'corners' }]);
+    ctx.mix({ block: 'corners' });
     // Crossing fingers.
 });
 ```
@@ -248,7 +248,7 @@ bh.match('button', function(ctx) {
 ```javascript
 bh.lib.corners = bh.lib.corners || {};
 bh.lib.corners.add = function(ctx) {
-    ctx.mix([{ block: 'corners' }]);
+    ctx.mix({ block: 'corners' });
     ctx.content([
         ctx.content(),
         { block: 'corners', elem: 'tl' },
@@ -352,7 +352,11 @@ ctx.mix([value[, force]])
 
 ```javascript
 bh.match('button_pseudo_yes', function(ctx) {
-    ctx.mix([{ block: 'link' }]);
+    ctx.mix({ block: 'link', mods: { pseudo: 'yes' } });
+    ctx.mix([
+        { elem: 'text' },
+        { block: 'ajax' }
+    ]);
 });
 ```
 
