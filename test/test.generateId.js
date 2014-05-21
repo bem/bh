@@ -12,4 +12,20 @@ describe('ctx.generateId()', function() {
         });
         bh.apply({ block: 'button' });
     });
+
+    it('should generate different ids within few calls of apply', function() {
+        var id1, id2;
+
+        bh.match('button1', function(ctx) {
+            id1 = ctx.generateId();
+        });
+        bh.apply({ block: 'button1' });
+
+        bh.match('button2', function(ctx) {
+            id2 = ctx.generateId();
+        });
+        bh.apply({ block: 'button2' });
+
+        id1.should.not.be.equal(id2);
+    });
 });
