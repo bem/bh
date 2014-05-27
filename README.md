@@ -448,6 +448,11 @@ ctx.extend()
 
 Аналог функции `extend` в jQuery.
 
+ctx.applyCtx()
+-------------
+
+deprecated. Следует использовать `ctx.applyBase()`.
+
 ctx.applyBase()
 ---------------
 
