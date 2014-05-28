@@ -1,4 +1,4 @@
-BH [![Build Status](https://travis-ci.org/enb-make/bh.png?branch=master)](https://travis-ci.org/enb-make/bh)
+BH [![Build Status](https://travis-ci.org/enb-make/bh.png?branch=master)](https://travis-ci.org/enb-make/bh) [![Coverage Status](https://img.shields.io/coveralls/enb-make/bh.svg)](https://coveralls.io/r/enb-make/bh)
 ===
 
 BH — это BEMJSON-процессор. Его главная цель — превратить BEMJSON в HTML.
