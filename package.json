@@ -20,22 +20,22 @@
         }
     ],
     "peerDependencies": {
-        "enb": ">= 0.7.15"
+        "enb": "0.x"
     },
     "dependencies": {
-        "inherit": "~2.1.0",
-        "vow": "~0.3.9",
-        "vow-fs": "~0.2.2"
+        "inherit": "*",
+        "vow": "0.x",
+        "vow-fs": "0.x"
     },
     "devDependencies": {
-        "mocha": "~1.18.2",
-        "chai": "~1.9.1",
-        "istanbul": "~0.2.8",
-        "jshint": "2.1.x",
-        "jscs": "0.0.12"
+        "mocha": "1.x",
+        "chai": "1.x",
+        "istanbul": "0.2.x",
+        "jshint": "2.x",
+        "jscs": "1.x"
     },
     "engines": {
-        "node": ">= 0.8.0"
+        "node": ">= 0.10"
     },
     "scripts": {
         "test" : "npm run-script jshint && npm run-script check-style && npm run-script unit-test-coverage",
