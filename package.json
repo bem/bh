@@ -22,11 +22,6 @@
     "peerDependencies": {
         "enb": "0.x"
     },
-    "dependencies": {
-        "inherit": "*",
-        "vow": "0.x",
-        "vow-fs": "0.x"
-    },
     "devDependencies": {
         "mocha": "1.x",
         "chai": "1.x",
