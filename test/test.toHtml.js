@@ -2,6 +2,24 @@ var BH = require('../lib/bh');
 require('chai').should();
 
 describe('bh.toHtml()', function() {
+    describe('content', function() {
+        var bh;
+        beforeEach(function() {
+            bh = new BH();
+        });
+        it('should return empty content #1', function() {
+            bh.apply([
+                false,
+                null,
+                undefined,
+                [],
+                '',
+                { content: false }, // `div` is here
+                { tag: false }
+            ]).should.equal('<div></div>');
+        });
+    });
+
     describe('tags', function() {
         var bh;
         beforeEach(function() {
@@ -17,6 +35,7 @@ describe('bh.toHtml()', function() {
             bh.apply({ tag: false, content: 'label' }).should.equal('label');
         });
     });
+
     describe('attrs', function() {
         var bh;
         beforeEach(function() {
@@ -47,6 +66,7 @@ describe('bh.toHtml()', function() {
             );
         });
     });
+
     describe('mods', function() {
         var bh;
         beforeEach(function() {
@@ -90,6 +110,7 @@ describe('bh.toHtml()', function() {
             );
         });
     });
+
     describe('mix', function() {
         var bh;
         beforeEach(function() {
