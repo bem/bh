@@ -18,6 +18,16 @@ describe('ctx.js()', function() {
         });
         bh.apply({ block: 'button' }).should.equal('<div class="button i-bem" onclick="return {&quot;button&quot;:{}};"></div>');
     });
+    it('should set elem js', function() {
+        bh.match('button__control', function(ctx) {
+            ctx.js(true);
+        });
+        bh.apply({ block: 'button', content: { elem: 'control' } })
+            .should.equal(
+                '<div class="button">' +
+                    '<div class="button__control i-bem" onclick="return {&quot;button__control&quot;:{}};"></div>' +
+                '</div>');
+    });
     it('should not override user js', function() {
         bh.match('button', function(ctx) {
             ctx.js(true);
