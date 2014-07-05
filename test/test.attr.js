@@ -20,9 +20,9 @@ describe('ctx.attr()', function() {
     });
     it('should set attr', function() {
         bh.match('checkbox', function(ctx) {
+            ctx.attr('name', undefined);
             ctx.attr('type', 'button');
             ctx.attr('disabled', false);
-            ctx.attr('name', undefined);
             ctx.attr('value', null);
         });
         bh.apply({ block: 'checkbox' }).should.equal('<div class="checkbox" type="button" disabled="false"></div>');
