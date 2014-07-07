@@ -9,7 +9,7 @@ describe('options', function() {
         });
         it('should use onclick and js format as default', function() {
             bh.apply({ block: 'button', js: true }).should.equal(
-                '<div class="button i-bem" onclick="return {&quot;button&quot;:{}};"></div>'
+                '<div class="button i-bem" onclick="return {&quot;button&quot;:{}}"></div>'
             );
         });
         it('should return current options', function() {
@@ -21,7 +21,7 @@ describe('options', function() {
                 jsAttrName: 'ondblclick'
             });
             bh.apply({ block: 'button', js: true }).should.equal(
-                '<div class="button i-bem" ondblclick="return {&quot;button&quot;:{}};"></div>'
+                '<div class="button i-bem" ondblclick="return {&quot;button&quot;:{}}"></div>'
             );
         });
         it('should use onclick as default and use jsAttrScheme option', function() {
