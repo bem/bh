@@ -6,6 +6,7 @@ describe('ctx.applyBase()', function() {
     beforeEach(function() {
         bh = new BH();
     });
+
     it('should apply base matcher for content', function() {
         bh.match('button', function(ctx) {
             ctx.content([
@@ -32,6 +33,7 @@ describe('ctx.applyBase()', function() {
             '</div>'
         );
     });
+
     it('should apply base matcher while wrapping', function() {
         bh.match('button', function(ctx) {
             return [
@@ -58,30 +60,4 @@ describe('ctx.applyBase()', function() {
             '<div class="button__after"></div>'
         );
     });
-    it('should apply another matcher', function() {
-        bh.match('corners', function(ctx) {
-            ctx.content([
-                ctx.content(),
-                { block: 'corners', elem: 'tl' },
-                { block: 'corners', elem: 'tr' },
-                { block: 'corners', elem: 'bl' },
-                { block: 'corners', elem: 'br' }
-            ], true);
-        });
-        bh.match('button', function(ctx) {
-            ctx.tag('button');
-            ctx.mix([{block: 'corners' }]);
-            ctx.applyBase({ block: 'corners' });
-        });
-        bh.apply({ block: 'button', content: 'Hello' }).should.equal(
-            '<button class="button corners">' +
-                'Hello' +
-                '<div class="corners__tl"></div>' +
-                '<div class="corners__tr"></div>' +
-                '<div class="corners__bl"></div>' +
-                '<div class="corners__br"></div>' +
-            '</button>'
-        );
-    });
-
 });

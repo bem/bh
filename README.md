@@ -218,51 +218,6 @@ bh.match('button', function(ctx) {
 });
 ```
 
-Как преобразовать json другим матчером?
----------------------------------------
-
-Это возможно в BH. Но, пожалуйста, не делайте этого. Пожалейте тех, кто после вас столкнется с горой ошибок из-за того, что поменялся матчер, который вы неявно использовали. Я рекомендую класть общий функционал в объект `bh.lib` и расшаривать общие методы обработки данных вместо того, чтобы "обманывать систему".
-
-Окей, вы все это прочитали, но остались непреклонны?
-
-```javascript
-bh.match('corners', function(ctx) {
-    ctx.content([
-        ctx.content(),
-        { block: 'corners', elem: 'tl' },
-        { block: 'corners', elem: 'tr' },
-        { block: 'corners', elem: 'bl' },
-        { block: 'corners', elem: 'br' }
-    ], true);
-});
-
-bh.match('button', function(ctx) {
-    ctx.applyBase({ block: 'corners' });
-    ctx.mix({ block: 'corners' });
-    // Crossing fingers.
-});
-```
-
-Но лучше использовать другой подход:
-
-```javascript
-bh.lib.corners = bh.lib.corners || {};
-bh.lib.corners.add = function(ctx) {
-    ctx.mix({ block: 'corners' });
-    ctx.content([
-        ctx.content(),
-        { block: 'corners', elem: 'tl' },
-        { block: 'corners', elem: 'tr' },
-        { block: 'corners', elem: 'bl' },
-        { block: 'corners', elem: 'br' }
-    ], true);
-});
-
-bh.match('button', function(ctx) {
-    bh.lib.corners.add(ctx);
-});
-```
-
 
 Класс Ctx
 =========
