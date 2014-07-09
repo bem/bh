@@ -35,14 +35,14 @@ describe('ctx.tParam()', function() {
     });
 
     it('should return tParam after applyBase', function() {
-        bh.match('select', function(ctx, json) {
+        bh.match('select', function(ctx) {
             ctx.tParam('foo', 222);
         });
-        bh.match('select_disabled', function(ctx, json) {
+        bh.match('select_disabled', function(ctx) {
             ctx.applyBase();
             ctx.tParam('bar', 111);
         });
-        bh.match('select__control', function(ctx, json) {
+        bh.match('select__control', function(ctx) {
             (ctx.tParam('foo') + ctx.tParam('bar')).should.equal(333);
         });
         bh.apply({ block : 'select', mods : { disabled : true }, content : { elem : 'control' } });
