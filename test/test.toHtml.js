@@ -65,6 +65,13 @@ describe('bh.toHtml()', function() {
                 '<a class="button" href=""></a>'
             );
         });
+        it('should escape attrs', function() {
+            bh.apply({
+                tag: 'a',
+                attrs: { href: '<script type="javascript">window && alert(document.cookie)</script>' },
+                content: 'link'
+            }).should.equal('<a href="&lt;script type=&quot;javascript&quot;&gt;window &amp;&amp; alert(document.cookie)&lt;/script&gt;">link</a>');
+        });
     });
 
     describe('mods', function() {
