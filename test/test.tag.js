@@ -13,12 +13,13 @@ describe('ctx.tag()', function() {
         bh.apply({ block: 'button', tag: 'button' });
     });
     it('should set empty tag', function() {
+        bh.match('link', function(ctx) {
+            ctx.tag('');
+        });
         bh.match('button', function(ctx) {
             ctx.tag(false);
         });
-        bh.apply({ block: 'button', content: { block: 'link' } }).should.equal(
-            '<div class="link"></div>'
-        );
+        bh.apply({ block: 'button', content: { block: 'link', content: 'link' } }).should.equal('link');
     });
     it('should set html tag', function() {
         bh.match('button', function(ctx) {
