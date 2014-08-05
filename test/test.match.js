@@ -39,7 +39,7 @@ describe('bh.match()', function() {
             }
         });
 
-        bh.apply({ block: 'button', mods: { 'type': 'submit' } }).should.equal(
+        bh.apply({ block: 'button', mods: { type: 'submit' } }).should.equal(
             '<button class="button button_type_submit" type="submit"></button>'
         );
     });
@@ -102,6 +102,43 @@ describe('bh.match()', function() {
         });
         bh.apply({ block: 'button', mods: { type: 'link' } }).should.equal(
             '<div class="button button_type_link"></div>'
+        );
+    });
+
+    it('should not match block mods when `elem` is present', function() {
+        bh.match('button_disabled__control', function(ctx) {
+            ctx.tag('span', true);
+        });
+        bh.match('button__control_disabled', function(ctx) {
+            ctx.tag('button', true);
+        });
+        bh.apply({ block: 'button', elem: 'control', mods: { disabled: true } }).should.equal(
+            '<button class="button__control button__control_disabled"></button>'
+        );
+    });
+
+    it('should properly match inherited block mods', function() {
+        bh.match('button_visibility_hidden__control', function(ctx) {
+            ctx.mod('foo', 'bar');
+        });
+        bh.match('button_visibility_visible__control', function(ctx) {
+            ctx.mod('foo', 'baz');
+        });
+        bh.match('button__control_visibility_hidden', function(ctx) {
+            ctx.tag('span');
+        });
+        bh.match('button__control_visibility_visible', function(ctx) {
+            ctx.tag('button');
+        });
+        bh.apply({
+            block: 'button',
+            mods: { visibility: 'hidden' },
+            content: {
+                elem: 'control',
+                mods: { visibility: 'visible' }
+            }
+        }).should.equal(
+            '<div class="button button_visibility_hidden"><button class="button__control button__control_visibility_visible button__control_foo_bar"></button></div>'
         );
     });
 });
