@@ -1,45 +1,22 @@
 BH [![NPM version](https://badge.fury.io/js/bh.svg)](http://badge.fury.io/js/bh) [![Build Status](https://travis-ci.org/enb-make/bh.svg?branch=master)](https://travis-ci.org/enb-make/bh) [![Dependency Status](https://gemnasium.com/enb-make/bh.svg)](https://gemnasium.com/enb-make/bh) [![Coverage Status](https://img.shields.io/coveralls/enb-make/bh.svg?branch=master)](https://coveralls.io/r/enb-make/bh)
 ===
 
-BH — это BEMJSON-процессор. Его главная цель — превратить BEMJSON в HTML.
+BH — это BEMJSON-процессор, его главная цель — превратить BEMJSON в HTML.
 
-Зачем нужен BH, если есть BEMHTML?
-----------------------------------
+Чем же так хорош BH?
+--------------------
 
-1. BH быстрый. Очень быстрый.
-2. BH не требует компиляции (в отличие от BEMHTML).
-3. BH удобен в отладке, т.к. он не компилируется в другой код (в отличие от BEMHTML).
-4. BH написан на чистом JavaScript, используется и расширяется через JavaScript.
-5. BH прост для понимания, ведь это всего лишь обертка над обычными преобразованиями исходного BEMJSON в конечный BEMJSON / HTML.
-6. BH компактен на клиенте.
-
-Метрики
--------
-
-Скорость обработки BEMJSON (1000 итераций).
-```javascript
-bemhtml - 3184ms (314 times per second)
-bh - 1214ms (824 times per second)
-BEM.HTML - 1427ms (701 times per second)
-```
-
-Вес результирующего файла (сжатого):
-```javascript
-BH - 40kb.
-BEMHTML - 76kb.
-```
-
-Время сборки.
-```javascript
-BH - 50-60ms.
-BEMHTML (dev) - 2000-3000ms.
-BEMHTML (prod) - 6000-7000ms.
-```
+1. Он быстрый.
+2. Не требует компиляции.
+3. Удобен в отладке, т.к. он не компилируется в другой код.
+4. Написан на чистом JavaScript, используется и расширяется через JavaScript.
+5. Прост для понимания, ведь это всего лишь обертка над обычными преобразованиями исходного BEMJSON в конечный BEMJSON / HTML.
+6. Компактен на клиенте (12,5 Кб после сжатия, 3,5 Кб после gzip).
 
 Установка
 ---------
 
-BH-процессор и ENB-технологии для его использования можно найти в npm-пакете `bh`.
+BH-процессор можно найти в npm-пакете `bh`, а ENB-технологии для его использования — в npm-пакете `enb-bh`.
 
 ```
 npm install bh
@@ -48,7 +25,7 @@ npm install bh
 Использование
 -------------
 
-BH-файлы в проекте имеют суффикс `bh.js`. Например, `page.bh.js`. Файл формируется в формате CommonJS для NodeJS:
+BH-файлы в проекте имеют суффикс `bh.js` (например, `page.bh.js`). Файл формируется в формате CommonJS для NodeJS:
 
 ```javascript
 module.exports = function(bh) {
@@ -56,29 +33,62 @@ module.exports = function(bh) {
 };
 ```
 
+Для преобразования исходного дерева BEMJSON в конечный HTML используется метод `apply`. Для получения промежуточного результата в виде развернутого BEMJSON-дерева нужно использовать метод `processBemJson`.
+
+Простой пример использования:
+```javascript
+var bh = new (require('bh').BH);
+bh.match('button', function(ctx) {
+    ctx.tag('button');
+})
+bh.processBemJson({ block: 'button' }); // { block: 'button', mods: {}, tag: 'button' }
+bh.apply({ block: 'button' }); // '<button class="button"></button>'
+```
+
 Преобразования
 --------------
 
-Функции для работы с BEMJSON ( **матчеры** ) объявляются через метод `match`. В теле функций описывается логика преобразования BEMJSON.
+Функции для работы с BEMJSON — **шаблоны** — объявляются через метод `match`. В теле функций описывается логика преобразования BEMJSON.
+В функцию-шаблон передаются два аргумента: `ctx` — инстанция класса `Ctx` и `json` — ссылка на текущий узел BEMJSON-дерева.
+
+*Замечание*: Категорически не рекомендуется вносить изменения напрямую в объект `json`, вместо этого следует использовать методы объекта `ctx`. Объект `json` рекомендуется использовать только для «чтения» (см. также метод `ctx.json()`).
 
 Синтаксис:
 
 ```javascript
-{BH} bh.match({String} expression, function({Ctx} ctx) {
+{BH} bh.match({String} expression, function({Ctx} ctx, {Object} json) {
     //.. actions
 });
 ```
 
-Также допустимо использовать несколько матчеров в одном вызове метода `match`.
+Также допустимо объявлять несколько шаблонов в одном вызове метода `match`.
 
 Синтаксис:
 
 ```javascript
-{BH} bh.match({Object} matchers);
+{BH} bh.match({Array} expressions, function({Ctx} ctx));
 
 ```
 
-Где `matchers` представляет собой объект вида:
+Где `expressions` — массив вида:
+
+```javascript
+[
+    {String} expression1,
+    ...,
+
+    {String} expressionN
+]
+```
+
+Или в виде объекта:
+
+```javascript
+{BH} bh.match({Object} templates);
+
+```
+
+Где `templates` представляет собой объект вида:
 
 ```javascript
 {
@@ -99,25 +109,22 @@ module.exports = function(bh) {
 Например, зададим блоку `button` тег `button`, а блоку `input` тег `input`:
 
 ```javascript
-module.exports = function(bh) {
-    bh.match('button', function(ctx) {
-        ctx.tag('button');
-    });
-    bh.match('input', function(ctx) {
-        ctx.tag('input');
-    });
-};
+bh.match('button', function(ctx) {
+    ctx.tag('button');
+});
+bh.match('input', function(ctx) {
+    ctx.tag('input');
+});
 ```
 
 Теперь нам нужна псевдо-кнопка. То есть, если у кнопки модификатор `pseudo` равен `yes`, то нужен тег `a` и атрибут `role="button"`:
 
 ```javascript
-module.exports = function(bh) {
-    bh.match('button_pseudo_yes', function(ctx) {
-        ctx.tag('a');
-        ctx.attr('role', 'button');
-    });
-};
+bh.match('button_pseudo_yes', function(ctx) {
+    ctx
+        .tag('a')
+        .attr('role', 'button');
+});
 ```
 
 В данном примере мы матчимся не просто на блок `button`, а на блок `button` с модификатором `pseudo`, имеющим значение `yes`.
@@ -125,7 +132,7 @@ module.exports = function(bh) {
 Матчинг
 -------
 
-Рассмотрим синтаксис строки матчинга для функций преобразования:
+Рассмотрим синтаксис строки матчинга для функций преобразования (в квадратных скобках необязательные параметры):
 
 ```javascript
 'block[_blockModName[_blockModVal]][__elemName][_elemModName[_elemModVal]]'
@@ -136,8 +143,6 @@ module.exports = function(bh) {
 ```javascript
 'блок[_имяМодификатораБлока[_значениеМодификатораБлока]][__имяЭлемента][_имяМодификатораЭлемента[_значениеМодификатораЭлемента]]'
 ```
-
-(В квадратных скобках необязательные параметры)
 
 Еще примеры
 -----------
@@ -169,7 +174,7 @@ bh.match('page', function(ctx) {
 Преобразование BEMJSON-дерева
 -----------------------------
 
-Кроме модификации элемента, функция-преобразователь может вернуть новый BEMJSON. Здесь мы воспользуемся методами `ctx.json()` (возвращает текущий элемент BEMJSON "как есть") и `ctx.content()` (возвращает или устанавливает контент).
+Кроме модификации элемента, функция-преобразователь может вернуть новый BEMJSON. Здесь мы воспользуемся методами `ctx.json()` (возвращает текущий элемент BEMJSON «как есть») и `ctx.content()` (возвращает или устанавливает контент).
 
 Например, обернем блок `header` блоком `header-wrapper`:
 
@@ -222,7 +227,8 @@ bh.match('button', function(ctx) {
 Класс Ctx
 =========
 
-Инстанции класса `Ctx` передаются во все матчеры. Рассмотрим методы класса:
+Инстанции класса `Ctx` передаются во все шаблоны. Все методы класса в set-режиме возвращают инстанцию класса, то есть реализут чейнинг.
+Рассмотрим методы класса:
 
 ctx.tag([value[, force]])
 ------------------------
@@ -234,6 +240,8 @@ bh.match('input', function(ctx) {
     ctx.tag('input');
 });
 ```
+
+*Замечание*: Если передать в качестве значения `false` или пустую строку, текущий узел не будет выведен в конечный HTML, выведется только его содержимое, если оно есть.
 
 ctx.mod(key[, value[, force]])
 ------------------------
@@ -353,12 +361,15 @@ bh.match('input', function(ctx) {
 ctx.json()
 ----------
 
-Возвращает текущий фрагмент BEMJSON-дерева. Может использоваться в связке с `return` для враппинга и подобных целей.
+Возвращает текущий фрагмент BEMJSON-дерева. Может использоваться в связке с `return` для враппинга и подобных целей. Для сокращения можно использовать второй аргумент функции-шаблона — `json`.
+
+*Замечание*: После вызова `ctx.applyBase()` нарушается цепочка естественного применения шаблонов, из-за этого `json` перестает указывать на актуальный узел в BEMJSON-дереве. В этом случае следует использовать `ctx.json()`.
 
 ```javascript
-bh.match('input', function(ctx) {
+bh.match('input', function(ctx, json) {
     return {
         elem: 'wrapper',
+        attrs: { name: json.name },
         content: ctx.json()
     };
 });
@@ -406,7 +417,7 @@ ctx.extend()
 ctx.applyBase()
 ---------------
 
-Выполняет преобразования данного BEMJSON-элемента остальными матчерами. Может понадобиться, например, чтобы добавить элемент в самый конец содержимого, если в базовых шаблонах в конец содержимого добавляются другие элементы.
+Выполняет преобразования данного BEMJSON-элемента остальными шаблонами. Может понадобиться, например, чтобы добавить элемент в самый конец содержимого, если в базовых шаблонах в конец содержимого добавляются другие элементы.
 
 Пример:
 
@@ -430,7 +441,7 @@ bh.match('header_float_yes', function(ctx) {
 ctx.stop()
 ----------
 
-Останавливает выполнение прочих матчеров для данного BEMJSON-элемента.
+Останавливает выполнение прочих шаблонов для данного BEMJSON-элемента.
 
 Пример:
 
