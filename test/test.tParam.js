@@ -45,6 +45,6 @@ describe('ctx.tParam()', function() {
         bh.match('select__control', function(ctx) {
             (ctx.tParam('foo') + ctx.tParam('bar')).should.equal(333);
         });
-        bh.apply({ block : 'select', mods : { disabled : true }, content : { elem : 'control' } });
+        bh.apply({ block: 'select', mods: { disabled: true }, content: { elem: 'control' } });
     });
 });

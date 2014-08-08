@@ -16,13 +16,15 @@ describe('ctx.content()', function() {
         bh.match('button', function(ctx) {
             ctx.content({ elem: 'text' });
         });
-        bh.apply({ block: 'button' }).should.equal('<div class="button"><div class="button__text"></div></div>');
+        bh.apply({ block: 'button' }).should.equal(
+            '<div class="button"><div class="button__text"></div></div>');
     });
     it('should set bemjson array content', function() {
         bh.match('button', function(ctx) {
             ctx.content([{ elem: 'text1' }, { elem: 'text2' }]);
         });
-        bh.apply({ block: 'button' }).should.equal('<div class="button"><div class="button__text1"></div><div class="button__text2"></div></div>');
+        bh.apply({ block: 'button' }).should.equal(
+            '<div class="button"><div class="button__text1"></div><div class="button__text2"></div></div>');
     });
     it('should set bemjson string content', function() {
         bh.match('button', function(ctx) {
@@ -55,7 +57,8 @@ describe('ctx.content()', function() {
         bh.match('button', function(ctx) {
             ctx.content({ elem: 'text1' });
         });
-        bh.apply({ block: 'button' }).should.equal('<div class="button"><div class="button__text1"></div></div>');
+        bh.apply({ block: 'button' }).should.equal(
+            '<div class="button"><div class="button__text1"></div></div>');
     });
     it('should override later declarations with force flag', function() {
         bh.match('button', function(ctx) {
@@ -64,7 +67,8 @@ describe('ctx.content()', function() {
         bh.match('button', function(ctx) {
             ctx.content({ elem: 'text1' });
         });
-        bh.apply({ block: 'button' }).should.equal('<div class="button"><div class="button__text2"></div></div>');
+        bh.apply({ block: 'button' }).should.equal(
+            '<div class="button"><div class="button__text2"></div></div>');
     });
     it('should override user declarations with force flag', function() {
         bh.match('button', function(ctx) {

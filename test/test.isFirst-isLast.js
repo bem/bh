@@ -16,11 +16,10 @@ describe('ctx.isFirst() / ctx.isLast()', function() {
                 ctx.mod('last', 'yes');
             }
         });
-        bh.apply({ block: 'button', content: [
-            { elem: 'inner' },
-            { elem: 'inner' },
-            { elem: 'inner' }
-        ]}).should.equal(
+        bh.apply({
+            block: 'button',
+            content: [{ elem: 'inner' }, { elem: 'inner' }, { elem: 'inner' }]
+        }).should.equal(
             '<div class="button">' +
             '<div class="button__inner button__inner_first_yes"></div>' +
             '<div class="button__inner"></div>' +
@@ -38,10 +37,13 @@ describe('ctx.isFirst() / ctx.isLast()', function() {
                 ctx.mod('last', 'yes');
             }
         });
-        bh.apply({ block: 'button', content: [
-            [ { elem: 'inner' } ],
-            [ { elem: 'inner' }, [ { elem: 'inner' } ] ]
-        ]}).should.equal(
+        bh.apply({
+            block: 'button',
+            content: [
+                [{ elem: 'inner' }],
+                [{ elem: 'inner' }, [{ elem: 'inner' }]]
+            ]
+        }).should.equal(
             '<div class="button">' +
             '<div class="button__inner button__inner_first_yes"></div>' +
             '<div class="button__inner"></div>' +

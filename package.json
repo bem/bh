@@ -24,7 +24,7 @@
         "chai": "1.x",
         "istanbul": "0.3.x",
         "jshint": "2.x",
-        "jscs": "1.4.x"
+        "jscs": "1.5.x"
     },
     "engines": {
         "node": ">= 0.10"

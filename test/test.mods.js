@@ -58,7 +58,8 @@ describe('ctx.mods()', function() {
         bh.match('button', function(ctx) {
             ctx.mods({ type: 'button', disabled: true });
         });
-        bh.apply({ block: 'button' }).should.equal('<div class="button button_type_button button_disabled"></div>');
+        bh.apply({ block: 'button' }).should.equal(
+            '<div class="button button_type_button button_disabled"></div>');
     });
 
     it('should override later declarations with force flag', function() {
@@ -75,6 +76,7 @@ describe('ctx.mods()', function() {
         bh.match('button', function(ctx) {
             ctx.mods({ type: 'button' }, true);
         });
-        bh.apply({ block: 'button', mods: { type: 'link' } }).should.equal('<div class="button button_type_button"></div>');
+        bh.apply({ block: 'button', mods: { type: 'link' } }).should.equal(
+            '<div class="button button_type_button"></div>');
     });
 });
