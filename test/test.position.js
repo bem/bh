@@ -10,11 +10,10 @@ describe('ctx.position()', function() {
         bh.match('button__inner', function(ctx) {
             ctx.mod('pos', ctx.position());
         });
-        bh.apply({ block: 'button', content: [
-            { elem: 'inner' },
-            { elem: 'inner' },
-            { elem: 'inner' }
-        ]}).should.equal(
+        bh.apply({
+            block: 'button',
+            content: [{ elem: 'inner' }, { elem: 'inner' }, { elem: 'inner' }]
+        }).should.equal(
             '<div class="button">' +
             '<div class="button__inner button__inner_pos_1"></div>' +
             '<div class="button__inner button__inner_pos_2"></div>' +
@@ -26,10 +25,13 @@ describe('ctx.position()', function() {
         bh.match('button__inner', function(ctx) {
             ctx.mod('pos', ctx.position());
         });
-        bh.apply({ block: 'button', content: [
-            [ { elem: 'inner' } ],
-            [ { elem: 'inner' }, [ { elem: 'inner' } ] ]
-        ]}).should.equal(
+        bh.apply({
+            block: 'button',
+            content: [
+                [{ elem: 'inner' }],
+                [{ elem: 'inner' }, [{ elem: 'inner' }]]
+            ]
+        }).should.equal(
             '<div class="button">' +
             '<div class="button__inner button__inner_pos_1"></div>' +
             '<div class="button__inner button__inner_pos_2"></div>' +

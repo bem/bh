@@ -33,14 +33,16 @@ describe('ctx.mix()', function() {
         bh.match('button', function(ctx) {
             ctx.mix({ block: 'mix2' });
         });
-        bh.apply({ block: 'button', mix: { block: 'mix1' } }).should.equal('<div class="button mix1 mix2"></div>');
+        bh.apply({ block: 'button', mix: { block: 'mix1' } })
+            .should.equal('<div class="button mix1 mix2"></div>');
     });
 
     it('should extend user mix', function() {
         bh.match('button', function(ctx) {
             ctx.mix([{ block: 'mix' }]);
         });
-        bh.apply({ block: 'button', mix: [{ block: 'user-mix' }] }).should.equal('<div class="button user-mix mix"></div>');
+        bh.apply({ block: 'button', mix: [{ block: 'user-mix' }] })
+            .should.equal('<div class="button user-mix mix"></div>');
     });
 
     it('should extend later declarations', function() {
@@ -67,7 +69,8 @@ describe('ctx.mix()', function() {
         bh.match('button', function(ctx) {
             ctx.mix([{ block: 'mix' }], true);
         });
-        bh.apply({ block: 'button', mix: [{ block: 'user-mix' }] }).should.equal('<div class="button mix"></div>');
+        bh.apply({ block: 'button', mix: [{ block: 'user-mix' }] })
+            .should.equal('<div class="button mix"></div>');
     });
 
     it('should inherit block name', function() {

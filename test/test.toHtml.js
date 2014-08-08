@@ -70,7 +70,9 @@ describe('bh.toHtml()', function() {
                 tag: 'a',
                 attrs: { href: '<script type="javascript">window && alert(document.cookie)</script>' },
                 content: 'link'
-            }).should.equal('<a href="&lt;script type=&quot;javascript&quot;&gt;window &amp;&amp; alert(document.cookie)&lt;/script&gt;">link</a>');
+            }).should.equal(
+                '<a href="&lt;script type=&quot;javascript&quot;&gt;window &amp;&amp; ' +
+                'alert(document.cookie)&lt;/script&gt;">link</a>');
         });
     });
 

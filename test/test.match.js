@@ -30,11 +30,10 @@ describe('bh.match()', function() {
 
     it('should allow to use a few matchers in one call #1', function() {
         bh.match({
-            'button': function(ctx) {
+            button: function(ctx) {
                 ctx.tag('button');
             },
-
-            'button_type_submit': function(ctx) {
+            button_type_submit: function(ctx) {
                 ctx.attr('type', 'submit');
             }
         });
@@ -138,7 +137,10 @@ describe('bh.match()', function() {
                 mods: { visibility: 'visible' }
             }
         }).should.equal(
-            '<div class="button button_visibility_hidden"><button class="button__control button__control_visibility_visible button__control_foo_bar"></button></div>'
+            '<div class="button button_visibility_hidden">' +
+            '<button class="button__control ' +
+                'button__control_visibility_visible button__control_foo_bar"></button>' +
+            '</div>'
         );
     });
 });
