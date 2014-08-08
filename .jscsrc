@@ -1,0 +1,28 @@
+{
+    "preset": "yandex",
+    "disallowSpacesInsideObjectBrackets": null,
+    "requireSpacesInsideObjectBrackets": "allButNested",
+
+    "requireSpacesInAnonymousFunctionExpression": null,
+    "disallowSpacesInAnonymousFunctionExpression": {
+        "beforeOpeningRoundBrace": true
+    },
+
+    "disallowMultipleVarDecl": null,
+    "disallowImplicitTypeConversion": null,
+
+    "maximumLineLength": 170,
+
+    "requireCurlyBraces": [
+        "else",
+        "for",
+        "while",
+        "do"
+    ],
+
+    "excludeFiles": [
+        "node_modules",
+        "tools",
+        "coverage"
+    ]
+}
