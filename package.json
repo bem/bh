@@ -19,13 +19,10 @@
             "email" : "mishanga@yandex-team.ru"
         }
     ],
-    "peerDependencies": {
-        "enb": "0.x"
-    },
     "devDependencies": {
         "mocha": "1.x",
         "chai": "1.x",
-        "istanbul": "0.2.x",
+        "istanbul": "0.3.x",
         "jshint": "2.x",
         "jscs": "1.4.x"
     },
