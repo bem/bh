@@ -36,4 +36,30 @@ describe('ctx.tParam()', function() {
         });
         bh.apply([{ block: 'button' }, { block: 'input' }]);
     });
+
+    it('should not override later declarations', function() {
+        bh.match('button', function(ctx) {
+            ctx.tParam('foo', 1);
+        });
+        bh.match('button', function(ctx) {
+            ctx.tParam('foo', 2);
+        });
+        bh.match('button__control', function(ctx) {
+            ctx.tParam('foo').should.equal(2);
+        });
+        bh.apply({ block: 'button', content: { elem: 'control' } });
+    });
+
+    it('should override later declarations with force flag', function() {
+        bh.match('button', function(ctx) {
+            ctx.tParam('foo', 1, true);
+        });
+        bh.match('button', function(ctx) {
+            ctx.tParam('foo', 2);
+        });
+        bh.match('button__control', function(ctx) {
+            ctx.tParam('foo').should.equal(1);
+        });
+        bh.apply({ block: 'button', content: { elem: 'control' } });
+    });
 });
