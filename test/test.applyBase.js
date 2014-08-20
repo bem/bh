@@ -73,4 +73,45 @@ describe('ctx.applyBase()', function() {
             '<div class="button__after"></div>'
         );
     });
+
+    it('should preserve tParam', function() {
+        bh.match('select__control', function(ctx) {
+            ctx.tParam('lol', 333);
+        });
+        bh.match('select', function(ctx) {
+            ctx.tParam('foo', 222);
+        });
+        bh.match('select_disabled', function(ctx) {
+            ctx.applyBase();
+            ctx.tParam('bar', 111);
+        });
+        bh.match('select__control', function(ctx) {
+            ctx.applyBase();
+            (ctx.tParam('foo') + ctx.tParam('bar') + ctx.tParam('lol')).should.equal(666);
+        });
+        bh.apply({ block: 'select', mods: { disabled: true }, content: { elem: 'control' } });
+    });
+
+    it('should preserve position', function() {
+        bh.match('button', function(ctx) {
+            if (ctx.isFirst()) {
+                ctx.mod('first', 'yes');
+            }
+            if (ctx.isLast()) {
+                ctx.mod('last', 'yes');
+            }
+        });
+        bh.match('button', function(ctx) {
+            ctx.applyBase();
+        });
+        bh.apply([
+            { block: 'button' },
+            { block: 'button' },
+            { block: 'button' }
+        ]).should.equal(
+            '<div class="button button_first_yes"></div>' +
+            '<div class="button"></div>' +
+            '<div class="button button_last_yes"></div>'
+        );
+    });
 });
