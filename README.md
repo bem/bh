@@ -474,13 +474,12 @@ bh.match('search', function(ctx) {
 ctx.tParam(key[, value])
 ------------------------
 
-Передает параметр вглубь BEMJSON-дерева. Например:
+Передает параметр вглубь BEMJSON-дерева.
+**force** — задать значение параметра даже если оно было задано ранее.
 
 ```javascript
 bh.match('input', function(ctx) {
-    ctx.content({
-        elem: 'control'
-    }, true);
+    ctx.content({ elem: 'control' });
     ctx.tParam('value', ctx.param('value'));
 });
 
