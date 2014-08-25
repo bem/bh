@@ -6,6 +6,11 @@ describe('ctx.apply()', function() {
     beforeEach(function() {
         bh = new BH();
     });
+
+    it('should return empty string on undefined bemjson', function() {
+        bh.apply().should.equal('');
+    });
+
     it('should return valid processed element', function() {
         bh.match('button', function(ctx) {
             var inner = ctx.apply({ block: 'button', elem: 'inner' });
@@ -21,6 +26,7 @@ describe('ctx.apply()', function() {
             '</div>'
         );
     });
+
     it('should return valid processed element with no block name', function() {
         bh.match('button', function(ctx) {
             var inner = ctx.apply({ elem: 'inner' });
