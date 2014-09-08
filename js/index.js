@@ -3,6 +3,10 @@ function BHController($scope) {
     $scope.compiledHtml = function() {
         $scope.error = '';
         var bh = new BH(), json;
+        bh.setOptions({
+            jsAttrName: 'data-bem',
+            jsAttrScheme: 'json'
+        });
         try {
             json = eval('(' + $scope.data.inputBemjson + ')');
         } catch (e) {
