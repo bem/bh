@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html ng-app>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf8"/>
+    <title>BH: Демо</title>
+    <link href="css/index.css" type="text/css" rel="stylesheet" />
+    <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <link href="css/bootstrap-responsive.min.css" type="text/css" rel="stylesheet" />
+    <link href="css/cm.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+    <!-- MODE: IFRAME -->
+    <!-- ORIGIN: index.html -->
+    <div class="container" id="cnt" ng-controller="BHController">
+        <h2>BH: Демо</h2>
+        <div class="hero-unit">
+            <h3>Исходный BEMJSON</h3>
+            <textarea id="input-bemjson" ng-model="data.inputBemjson"></textarea>
+            <div class="row">
+                <div class="col span6">
+                    <h3>Матчеры</h3>
+                    <textarea id="input-matchers" ng-model="data.inputMatchers"></textarea>
+                    <a href="https://github.com/bem/bh">Документация</a>
+                </div>
+                <div class="col span5">
+                    <h3>Результат</h3>
+                    <textarea id="result-html">{{compiledHtml()}}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var module = { exports: {} };
+    </script>
+    <script src="js/bh.js" type="text/javascript"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js" type="text/javascript"></script>
+    <script src="js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="js/index.js" type="text/javascript"></script>
+    <script src="js/jshint.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/codemirror.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        function replaceTextarea(textArea, vn) {
+            var div = document.createElement('div');
+            div.className = 'code';
+            textArea.parentNode.insertBefore(div, textArea);
+            textArea.style.display = 'none';
+            var cm = CodeMirror(div,
+                {
+                    value: textArea.value,
+                    mode: 'javascript',
+                    theme: 'twilight',
+                    indentUnit: 4,
+                    indentWithTabs: false,
+                    lineNumbers: true,
+                    styleActiveLine: true,
+                    autoCloseBrackets: true,
+                    matchBrackets: true,
+                    gutters: ["CodeMirror-lint-markers"],
+                    lintWith: vn === 'inputMatchers' ? CodeMirror.javascriptValidator : undefined,
+                    extraKeys: {
+                      Tab: function(cm) {
+                        var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+                        cm.replaceSelection(spaces, "end", "+input");
+                      }
+                    }
+                }
+            );
+            var scope = angular.element(document.getElementById('cnt')).scope();
+            var timer = null;
+            cm.on('change', function() {
+                if (timer) {
+                    window.clearTimeout(timer);
+                }
+                timer = window.setTimeout(function(){
+                    scope.data[vn] = cm.doc.getValue();
+                    var res = document.getElementById('result-html');
+                    res.value = scope.compiledHtml();
+                    res.onchange();
+                }, 500);
+            });
+        }
+        function replaceOutput(textArea) {
+            var div = document.createElement('div');
+            div.className = 'code';
+            textArea.parentNode.insertBefore(div, textArea);
+            textArea.style.display = 'none';
+            var cm = CodeMirror(div,
+                {
+                    value: textArea.value,
+                    mode: 'htmlmixed',
+                    theme: 'twilight',
+                    readOnly: true
+                }
+            );
+            textArea.onchange = function() {
+                cm.doc.setValue(textArea.value);
+            };
+        }
+        window.setTimeout(function() {
+            replaceTextarea(document.getElementById('input-bemjson'), 'inputBemjson');
+            replaceTextarea(document.getElementById('input-matchers'), 'inputMatchers');
+            replaceOutput(document.getElementById('result-html'));
+        }, 1000);
+    </script>
+</body>
+</html>
