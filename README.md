@@ -339,6 +339,16 @@ bh.match('input', function(ctx) {
 });
 ```
 
+## ctx.cls([value[, force]])
+
+Возвращает/устанавливает значение CSS-класса в зависимости от аргументов.
+
+```javascript
+bh.match('page', function(ctx) {
+    ctx.cls('ua_js_no ua_css_standard');
+});
+```
+
 ## ctx.content([value[, force]])
 
 Возвращает/устанавливает содержимое в зависимости от аргументов. **force** — задать содержимое, даже если оно было задано ранее.
