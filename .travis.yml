@@ -5,7 +5,7 @@ node_js:
 
 env:
   global:
-    - GH_REF: github.com/enb-make/bh.git
+    - GH_REF: github.com/bem/bh.git
     - ISTANBUL_COVERAGE: yes
 
 branches:

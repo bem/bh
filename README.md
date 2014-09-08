@@ -1,4 +1,4 @@
-BH [![NPM version](https://badge.fury.io/js/bh.svg)](http://badge.fury.io/js/bh) [![Build Status](https://travis-ci.org/enb-make/bh.svg?branch=master)](https://travis-ci.org/enb-make/bh) [![Dependency Status](https://gemnasium.com/enb-make/bh.svg)](https://gemnasium.com/enb-make/bh) [![Coverage Status](https://img.shields.io/coveralls/enb-make/bh.svg?branch=master)](https://coveralls.io/r/enb-make/bh)
+BH [![NPM version](https://badge.fury.io/js/bh.svg)](http://badge.fury.io/js/bh) [![Build Status](https://travis-ci.org/bem/bh.svg?branch=master)](https://travis-ci.org/bem/bh) [![Dependency Status](https://gemnasium.com/bem/bh.svg)](https://gemnasium.com/bem/bh) [![Coverage Status](https://img.shields.io/coveralls/bem/bh.svg?branch=master)](https://coveralls.io/r/bem/bh)
 ===
 
 Эта документация доступна также [на русском](./README.ru.md).
