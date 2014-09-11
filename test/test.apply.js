@@ -11,6 +11,13 @@ describe('ctx.apply()', function() {
         bh.apply().should.equal('');
     });
 
+    it('should return empty string on falsy template result', function() {
+        bh.match('link', function(ctx, json) {
+            if (!json.url) return null;
+        });
+        bh.apply({ block: 'link' }).should.equal('');
+    });
+
     it('should return valid processed element', function() {
         bh.match('button', function(ctx) {
             var inner = ctx.apply({ block: 'button', elem: 'inner' });
