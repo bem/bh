@@ -1,8 +1,6 @@
 BH [![NPM version](https://badge.fury.io/js/bh.svg)](http://badge.fury.io/js/bh) [![Build Status](https://travis-ci.org/bem/bh.svg?branch=master)](https://travis-ci.org/bem/bh) [![Dependency Status](https://gemnasium.com/bem/bh.svg)](https://gemnasium.com/bem/bh) [![Coverage Status](https://img.shields.io/coveralls/bem/bh.svg?branch=master)](https://coveralls.io/r/bem/bh)
 ===
 
-This README is also available [in English](./README.md).
-
 ## Что это?
 
 BH — это BEMJSON-процессор, который превращает BEMJSON в HTML. Одним словом, это шаблонизатор.

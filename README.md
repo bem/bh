@@ -1,8 +1,6 @@
 BH [![NPM version](https://badge.fury.io/js/bh.svg)](http://badge.fury.io/js/bh) [![Build Status](https://travis-ci.org/bem/bh.svg?branch=master)](https://travis-ci.org/bem/bh) [![Dependency Status](https://gemnasium.com/bem/bh.svg)](https://gemnasium.com/bem/bh) [![Coverage Status](https://img.shields.io/coveralls/bem/bh.svg?branch=master)](https://coveralls.io/r/bem/bh)
 ===
 
-This documentation is also available in [Russian](./README.ru.md).
-
 ## What is this?
 
 BH is processor that converts BEMJSON to HTML. Or in other words a template engine.
