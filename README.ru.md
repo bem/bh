@@ -127,7 +127,7 @@ bh.match('button_pseudo_yes', function(ctx) {
 });
 ```
 
-В данном примере мы матчимся не просто на блок `button`, а на блок `button` с модификатором `pseudo`, имеющим значение `yes`.
+В данном примере мы матчимся не просто на блок `button`, а на блок `button` с модификатором `pseudo`, имеющим значение `true`.
 
 ## Матчинг
 
@@ -153,7 +153,7 @@ bh.match('popup', function(ctx) {
 });
 ```
 
-Замиксуем `form` в `search-form`:
+Замиксуем `form` с `search-form`:
 
 ```javascript
 bh.match('search-form', function(ctx) {
@@ -380,8 +380,8 @@ bh.match('input', function(ctx, json) {
 ## ctx.isLast()
 
 **ctx.position()** возвращает позицию текущего BEMJSON-элемента в рамках родительского.
-**ctx.isFirst()** возвращает true, если текущий BEMJSON-элемент — первый в рамках родительского BEMJSON-элемента.
-**ctx.isLast()** возвращает true, если текущий BEMJSON-элемент — последний в рамках родительского BEMJSON-элемента.
+**ctx.isFirst()** возвращает `true`, если текущий BEMJSON-элемент — первый в рамках родительского BEMJSON-элемента.
+**ctx.isLast()** возвращает `true`, если текущий BEMJSON-элемент — последний в рамках родительского BEMJSON-элемента.
 
 Пример:
 ```javascript
