@@ -5,6 +5,8 @@ BH [![NPM version](https://badge.fury.io/js/bh.svg)](http://badge.fury.io/js/bh)
 
 BH — это BEMJSON-процессор, который превращает BEMJSON в HTML. Одним словом, это шаблонизатор.
 
+[Он-лайн демо](//bem.github.io/bh/).
+
 ## Преимущества
 
 1. Быстрый.

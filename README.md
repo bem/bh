@@ -5,6 +5,8 @@ BH [![NPM version](https://badge.fury.io/js/bh.svg)](http://badge.fury.io/js/bh)
 
 BH is processor that converts BEMJSON to HTML. Or in other words a template engine.
 
+[On-line demo](//bem.github.io/bh/).
+
 ## Advantages
 
 BH is:
