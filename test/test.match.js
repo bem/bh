@@ -143,4 +143,17 @@ describe('bh.match()', function() {
             '</div>'
         );
     });
+
+    it('should properly match elem mods', function() {
+        bh.match('button', function(ctx) {
+            ctx.content({ elem: 'control' });
+        });
+        // Should not fail on elem mod match - #93
+        bh.match('button__control_disabled', function(ctx) {
+            ctx.tag('button');
+        });
+        bh.apply({ block: 'button' }).should.equal(
+            '<div class="button"><div class="button__control"></div></div>'
+        );
+    });
 });
