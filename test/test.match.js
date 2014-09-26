@@ -77,6 +77,18 @@ describe('bh.match()', function() {
         );
     });
 
+    it('should match later mods declarations', function() {
+        bh.match('button', function(ctx) {
+            ctx.mod('role', 'button');
+        });
+        bh.match('button_role_button', function(ctx) {
+            ctx.tag('button');
+        });
+        bh.apply({ block: 'button' }).should.equal(
+            '<button class="button button_role_button"></button>'
+        );
+    });
+
     it('should not fail on non-identifier mods', function() {
         bh.match('button_is-bem_yes__control', function(ctx) {
             ctx.content('Hello');
