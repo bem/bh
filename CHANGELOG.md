@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.1.3
+- TypeError when using elemMod matcher (#93).
+
 ## 3.1.2
 - Falsy `return` should provide empty string result.
 
