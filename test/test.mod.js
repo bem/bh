@@ -14,6 +14,13 @@ describe('ctx.mod()', function() {
         bh.apply({ block: 'button', mods: { type: 'button' } });
     });
 
+    it('should return elem mod', function() {
+        bh.match('button__control', function(ctx) {
+            ctx.mod('type').should.equal('button');
+        });
+        bh.apply({ block: 'button', elem: 'control', mods: { type: 'button' } });
+    });
+
     it('should return undefined mod', function() {
         bh.match('button', function(ctx) {
             (typeof ctx.mod('type')).should.equal('undefined');

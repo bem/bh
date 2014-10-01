@@ -21,6 +21,13 @@ describe('ctx.mods()', function() {
         bh.apply({ block: 'button', mods: { type: 'button' } });
     });
 
+    it('should return elem mods', function() {
+        bh.match('button__control', function(ctx) {
+            ctx.mods().type.should.equal('button');
+        });
+        bh.apply({ block: 'button', elem: 'control', elemMods: { type: 'button' } });
+    });
+
     it('should return boolean mods', function() {
         bh.match('button', function(ctx) {
             ctx.mods().disabled.should.equal(true);
