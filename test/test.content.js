@@ -72,8 +72,8 @@ describe('ctx.content()', function() {
     });
     it('should override user declarations with force flag', function() {
         bh.match('button', function(ctx) {
-            ctx.content({ elem: 'text' });
+            ctx.content('text', true);
         });
-        bh.apply({ block: 'button', content: 'Hello' }).should.equal('<div class="button">Hello</div>');
+        bh.apply({ block: 'button', content: 'Hello' }).should.equal('<div class="button">text</div>');
     });
 });
