@@ -20,6 +20,35 @@ describe('bh.toHtml()', function() {
         });
     });
 
+    describe('bem', function() {
+        var bh;
+        beforeEach(function() {
+            bh = new BH();
+        });
+
+        it('should not set class if not bem', function() {
+            bh.apply({ block: 'button', bem: false }).should.equal('<div></div>');
+        });
+
+        it('should not set js if not bem', function() {
+            bh.apply({ block: 'button', js: true, bem: false }).should.equal('<div></div>');
+        });
+
+        it('should not set mixed class if not bem', function() {
+            bh.apply({
+                block: 'button',
+                mix: { block: 'link', bem: false }
+            }).should.equal('<div class="button"></div>');
+        });
+
+        it('should not set mixed js if not bem', function() {
+            bh.apply({
+                block: 'button',
+                mix: { block: 'link', js: true, bem: false }
+            }).should.equal('<div class="button"></div>');
+        });
+    });
+
     describe('tags', function() {
         var bh;
         beforeEach(function() {
@@ -159,6 +188,16 @@ describe('bh.toHtml()', function() {
             });
             bh.apply({ block: 'button' }).should.equal(
                 '<div class="button button__control button__control_disabled"></div>'
+            );
+        });
+        it('should set mixed js', function() {
+            bh.apply({
+                block: 'button',
+                mix: [{ block: 'link', js: true }, { elem: 'control', js: { foo: 'bar' } }]
+            }).should.equal(
+                '<div class="button link button__control i-bem" ' +
+                    'onclick="return {&quot;link&quot;:{},&quot;button__control&quot;:{&quot;foo&quot;:&quot;bar&quot;}}"' +
+                '></div>'
             );
         });
         it('should set several mixes', function() {
