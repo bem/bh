@@ -15,7 +15,7 @@ BH is:
 1. easy to debug due to no need of compilation to another code;
 1. based on JavaScript (usage and extensions);
 1. easy to understand – it is a wrapper over a regular conversion of source BEMJSON to output BEMJSON / HTML;
-1. compact on client side (12.5 Kb after compression, 3.5 Kb after gzip);
+1. compact on client side (12.4 Kb after compression, 3.7 Kb after gzip);
 1. does not require a compilation.
 
 ## Install
