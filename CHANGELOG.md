@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.1.4
+- Ignore `mix` and `js` when `bem` is false (#98).
+
 ## 3.1.3
 - TypeError when using elemMod matcher (#93).
 
