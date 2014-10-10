@@ -175,4 +175,29 @@ describe('bh.toHtml()', function() {
             );
         });
     });
+
+    describe('js', function()  {
+        var bh;
+        beforeEach(function() {
+            bh = new BH();
+        });
+        it('should set onclick attribute, when js mode is true', function() {
+            bh.match('button', function(ctx) {
+                ctx.js(true);
+            });
+            bh.apply({ block: 'button' }).should.equal(
+                '<div class="button i-bem" onclick="return {&quot;button&quot;:{}}"></div>'
+            );
+        });
+        it('should not set onclick attribute, when bem mode is false', function() {
+            bh.match('button', function(ctx) {
+                ctx
+                    .bem(false)
+                    .js(true);
+            });
+            bh.apply({ block: 'button' }).should.equal(
+                '<div></div>'
+            );
+        });
+    });
 });
