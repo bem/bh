@@ -389,14 +389,17 @@ bh.match('input', function(ctx, json) {
 ```
 
 ## ctx.position()
-## ctx.isFirst()
-## ctx.isLast()
-
 **ctx.position()** returns the position of the current BEMJSON element within parental element.
+See example for `ctx.position()`, `ctx.isFirst()` and `ctx.isLast()` below.
+
+## ctx.isFirst()
 **ctx.isFirst()** returns `true` if the current BEMJSON element is the first within the parental BEMJSON element.
+See example for `ctx.position()`, `ctx.isFirst()` and `ctx.isLast()` below.
+
+## ctx.isLast()
 **ctx.isLast()** returns `true` if the current BEMJSON element is the last within the parental BEMJSON element.
 
-For example:
+Example for `ctx.position()`, `ctx.isFirst()` and `ctx.isLast()`:
 
 ```javascript
 bh.match('list__item', function(ctx) {
@@ -481,7 +484,7 @@ bh.match('search', function(ctx) {
 
 ## ctx.tParam(key[, value])
 
-This class method passes a parameter into BEMJSON tree. Use **force** to set the parameter value even if it was specified earlier.
+This class method get / passes a parameter into BEMJSON tree. Use **force** to set the parameter value even if it was specified earlier.
 
 ```javascript
 bh.match('input', function(ctx) {

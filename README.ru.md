@@ -376,14 +376,17 @@ bh.match('input', function(ctx, json) {
 ```
 
 ## ctx.position()
-## ctx.isFirst()
-## ctx.isLast()
-
 **ctx.position()** возвращает позицию текущего BEMJSON-элемента в рамках родительского.
+См. пример для `ctx.position()`, `ctx.isFirst()` и `ctx.isLast()`.
+
+## ctx.isFirst()
 **ctx.isFirst()** возвращает `true`, если текущий BEMJSON-элемент — первый в рамках родительского BEMJSON-элемента.
+См. пример для `ctx.position()`, `ctx.isFirst()` и `ctx.isLast()`.
+
+## ctx.isLast()
 **ctx.isLast()** возвращает `true`, если текущий BEMJSON-элемент — последний в рамках родительского BEMJSON-элемента.
 
-Пример:
+Пример для `ctx.position()`, `ctx.isFirst()` и `ctx.isLast()`:
 ```javascript
 bh.match('list__item', function(ctx) {
     ctx.mod('pos', ctx.position());
@@ -464,7 +467,7 @@ bh.match('search', function(ctx) {
 
 ## ctx.tParam(key[, value])
 
-Передает параметр вглубь BEMJSON-дерева. **force** — задать значение параметра, даже если оно было задано ранее.
+Получает / передает параметр вглубь BEMJSON-дерева. **force** — задать значение параметра, даже если оно было задано ранее.
 
 ```javascript
 bh.match('input', function(ctx) {
