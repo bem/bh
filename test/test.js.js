@@ -34,7 +34,7 @@ describe('ctx.js()', function() {
                     '<div class="button__control i-bem" onclick="return {&quot;button__control&quot;:{}}"></div>' +
                 '</div>');
     });
-    it('should not override user js', function() {
+    it('should extend user js', function() {
         bh.match('button', function(ctx) {
             ctx.js({ a: 2 });
         });

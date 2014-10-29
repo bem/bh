@@ -26,6 +26,6 @@ describe('ctx.generateId()', function() {
         });
         bh.apply({ block: 'button2' });
 
-        id1.should.not.be.equal(id2);
+        id1.should.not.equal(id2);
     });
 });

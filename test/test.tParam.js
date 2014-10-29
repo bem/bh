@@ -17,6 +17,16 @@ describe('ctx.tParam()', function() {
         bh.apply({ block: 'button', content: { elem: 'inner' } });
     });
 
+    it('should return tParam value in nested block', function() {
+        bh.match('button', function(ctx) {
+            ctx.tParam('name', 'sample-name');
+        });
+        bh.match('input', function(ctx) {
+            ctx.tParam('name').should.equal('sample-name');
+        });
+        bh.apply({ block: 'button', content: { block: 'input' } });
+    });
+
     it('should return tParam value in sub-nested element', function() {
         bh.match('button', function(ctx) {
             ctx.tParam('name', 'sample-name');

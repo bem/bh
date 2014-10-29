@@ -9,7 +9,7 @@ describe('ctx.mods()', function() {
 
     it('should return empty mods', function() {
         bh.match('button', function(ctx) {
-            (typeof ctx.mods()).should.equal('object');
+            Object.keys(ctx.mods()).length.should.equal(0);
         });
         bh.apply({ block: 'button' });
     });
