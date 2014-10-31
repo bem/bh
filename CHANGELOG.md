@@ -1,7 +1,7 @@
 # Changelog
 
 ## 3.2.0
-- Escape content when option `escapeContent` enabled (#98).
+- Escape content when option `escapeContent` enabled (#97).
 - Some fixes.
 
 ## 3.1.4
