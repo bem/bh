@@ -57,12 +57,12 @@ describe('bh.match()', function() {
         bh.apply({
             block: 'item',
             content: [
-                { elem: 'mark', content: '>' },
+                { elem: 'mark', content: '*' },
                 { elem: 'text', content: 'foobar' }
             ]
         }).should.equal(
             '<div class="item">' +
-                '<span class="item__mark">></span>' +
+                '<span class="item__mark">*</span>' +
                 '<span class="item__text">foobar</span>' +
             '</div>'
         );

@@ -7,7 +7,8 @@ describe('bh.toHtml()', function() {
         beforeEach(function() {
             bh = new BH();
         });
-        it('should return empty content #1', function() {
+
+        it('should return empty content', function() {
             bh.apply([
                 false,
                 null,
@@ -17,6 +18,29 @@ describe('bh.toHtml()', function() {
                 { content: false }, // `div` is here
                 { tag: false }
             ]).should.equal('<div></div>');
+        });
+
+        it('should escape string when option enabled', function() {
+            bh.setOptions({ escapeContent: true });
+            bh.apply('<a>&nbsp;</a>').should.equal('&lt;a&gt;&amp;nbsp;&lt;/a&gt;');
+        });
+
+        it('should escape content when option enabled', function() {
+            bh.setOptions({ escapeContent: true });
+            bh.apply({
+                content: [
+                    '<&>',
+                    { content: '<&>', tag: false },
+                    { content: '<&>' }
+                ]
+            }).should.equal('<div>&lt;&amp;&gt;&lt;&amp;&gt;<div>&lt;&amp;&gt;</div></div>');
+        });
+
+        it('should prefer `html` field', function() {
+            bh.apply({
+                content: '<br/>',
+                html: '<br/>'
+            }).should.equal('<div><br/></div>');
         });
     });
 
