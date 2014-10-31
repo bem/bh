@@ -1,5 +1,8 @@
 {
     "preset": "yandex",
+
+    "requireSpaceBeforeBlockStatements": true,
+
     "disallowSpacesInsideObjectBrackets": null,
     "requireSpacesInsideObjectBrackets": "allButNested",
 
