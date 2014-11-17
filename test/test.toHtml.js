@@ -184,6 +184,9 @@ describe('bh.toHtml()', function() {
                 mix: [null, undefined]
             }).should.equal('<div class="button"></div>');
         });
+        it('should not set elem mix on empty node', function() {
+            bh.apply({ mix: { elem: 'button' } }).should.equal('<div></div>');
+        });
         it('should set elem mix', function() {
             bh.match('button', function(ctx) {
                 ctx.mix({ elem: 'mix' });
@@ -251,6 +254,16 @@ describe('bh.toHtml()', function() {
         it('should not set `i-bem` class on mixed element', function() {
             bh.apply({ block: 'icon', content: 'submit', mix: { block: 'button', elem: 'control', js: true } }).should.equal(
                 '<div class="icon button__control" onclick="return {&quot;button__control&quot;:{}}">submit</div>');
+        });
+    });
+
+    describe('cls', function() {
+        var bh;
+        beforeEach(function() {
+            bh = new BH();
+        });
+        it('should set cls', function() {
+            bh.apply({ cls: 'clearfix' }).should.equal('<div class="clearfix"></div>');
         });
     });
 });

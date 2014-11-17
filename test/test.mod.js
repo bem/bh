@@ -18,7 +18,7 @@ describe('ctx.mod()', function() {
         bh.match('button', function(ctx) {
             (typeof ctx.mod('type')).should.equal('undefined');
         });
-        bh.apply({ block: 'button', mods: { disabled: true } });
+        bh.apply({ block: 'button' });
     });
 
     it('should return boolean mod', function() {

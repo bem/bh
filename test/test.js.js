@@ -48,12 +48,12 @@ describe('ctx.js()', function() {
 
     it('should override later declarations with force flag', function() {
         bh.match('button', function(ctx) {
-            ctx.js(false, true);
+            ctx.js(true, true);
         });
         bh.match('button', function(ctx) {
-            ctx.js(true);
+            ctx.js(false);
         });
-        bh.apply({ block: 'button' }).should.equal('<div class="button"></div>');
+        bh.apply({ block: 'button' }).should.equal('<div class="button i-bem" onclick="return {&quot;button&quot;:{}}"></div>');
     });
 
     it('should override user declarations with force flag', function() {

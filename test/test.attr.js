@@ -18,7 +18,7 @@ describe('ctx.attr()', function() {
         bh.match('button', function(ctx) {
             (typeof ctx.attr('type')).should.equal('undefined');
         });
-        bh.apply({ block: 'button', attrs: { disabled: 'disabled' } });
+        bh.apply({ block: 'button' });
     });
 
     it('should set attr', function() {
