@@ -244,8 +244,13 @@ describe('bh.toHtml()', function() {
         beforeEach(function() {
             bh = new BH();
         });
-        it('should not set params on element', function() {
-            bh.apply({ block: 'button', elem: 'control', js: true, content: 'submit' }).should.equal('<div class="button__control">submit</div>');
+        it('should not set `i-bem` class on element', function() {
+            bh.apply({ block: 'button', elem: 'control', js: true, content: 'submit' }).should.equal(
+                '<div class="button__control" onclick="return {&quot;button__control&quot;:{}}">submit</div>');
+        });
+        it('should not set `i-bem` class on mixed element', function() {
+            bh.apply({ block: 'icon', content: 'submit', mix: { block: 'button', elem: 'control', js: true } }).should.equal(
+                '<div class="icon button__control" onclick="return {&quot;button__control&quot;:{}}">submit</div>');
         });
     });
 });
