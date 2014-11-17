@@ -238,4 +238,14 @@ describe('bh.toHtml()', function() {
             );
         });
     });
+
+    describe('js', function() {
+        var bh;
+        beforeEach(function() {
+            bh = new BH();
+        });
+        it('should not set params on element', function() {
+            bh.apply({ block: 'button', elem: 'control', js: true, content: 'submit' }).should.equal('<div class="button__control">submit</div>');
+        });
+    });
 });
