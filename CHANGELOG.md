@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.2.1
+- Do not add `i-bem` class to element with `js` (#106).
+
 ## 3.2.0
 - Escape content when option `escapeContent` enabled (#97).
 - Some fixes.

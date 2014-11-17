@@ -2,7 +2,7 @@
   "author": "Marat Dulin <mdevils@yandex.ru>",
   "description": "Template engine. BEMJSON -> HTML processor.",
   "name": "bh",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "repository": "https://github.com/bem/bh",
   "licence": "MIT",
   "contributors": [
