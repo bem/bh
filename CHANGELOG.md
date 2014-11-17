@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.2.2
+- Do not add `i-bem` class to mixed elements with `js`.
+
 ## 3.2.1
 - Do not add `i-bem` class to element with `js` (#106).
 
