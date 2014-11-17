@@ -29,7 +29,7 @@ describe('ctx.mix()', function() {
         bh.apply({ block: 'button' }).should.equal('<div class="button mix"></div>');
     });
 
-    it('should extend single mix', function() {
+    it('should extend user single mix', function() {
         bh.match('button', function(ctx) {
             ctx.mix({ block: 'mix2' });
         });

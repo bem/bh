@@ -9,7 +9,7 @@ describe('ctx.attrs()', function() {
 
     it('should return empty attrs', function() {
         bh.match('button', function(ctx) {
-            (typeof ctx.attrs()).should.equal('object');
+            Object.keys(ctx.attrs()).length.should.equal(0);
         });
         bh.apply({ block: 'button' });
     });
