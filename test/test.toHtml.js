@@ -171,6 +171,11 @@ describe('bh.toHtml()', function() {
                 '<button class="button button_disabled"></button>'
             );
         });
+        it('should not ignore zero mods', function() {
+            bh.apply({ block: 'button', mods: { zero: 0 } }).should.equal(
+                '<div class="button button_zero_0"></div>'
+            );
+        });
     });
 
     describe('mix', function() {
