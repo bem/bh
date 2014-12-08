@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.3
+- Speed improvement by better escaping (#111).
+- `toHtml`: add mod === 0 to output (#110).
+
 ## 3.2.2
 - Do not add `i-bem` class to mixed elements with `js`.
 
