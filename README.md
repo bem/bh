@@ -17,6 +17,7 @@ BH is:
 1. easy to understand – it is a wrapper over a regular conversion of source BEMJSON to output BEMJSON / HTML;
 1. compact on client side (12.4 Kb after compression, 3.7 Kb after gzip);
 1. does not require a compilation.
+1. has Express support
 
 ## Install
 
@@ -495,4 +496,36 @@ bh.match('input', function(ctx) {
 bh.match('input__control', function(ctx) {
     ctx.attr('value', ctx.tParam('value'));
 });
+```
+
+# Express support
+
+BH provides ability to use it with [Express](http://expressjs.com).
+
+```javascript
+var express = require('express');
+var app = express();
+var bh = require('bh');
+
+// define the template engine
+app.engine('bh', bh.__express);
+
+// register the template engine
+app.set('view engine', 'bh');
+// specify the bundles directory with bh-templates
+app.set('views', './bundles');
+
+app.get('/', function (req, res) {
+    // path to the template relative to the `./bundles` folder
+    // file extention `.bh` is required, `.bh.js` won't work
+    var pathToTemplate = 'bundleName/bundleName.bh';
+
+    res.locals.bemjson = {block: 'test'};
+    // any data to use into templates
+    res.locals.message = 'Use bh with your Express application';
+
+    res.render(pathToTemplate);
+});
+
+app.listen(3000);
 ```
