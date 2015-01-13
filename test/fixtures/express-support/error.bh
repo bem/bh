@@ -1,0 +1,12 @@
+var BH = require('../../../lib/bh');
+var bh = new BH();
+
+bh.match('root', function (ctx) {
+    ctx
+        .tag('example')
+        .attr('name', 'value')
+        .error()
+        .content(ctx.json().data.name);
+});
+
+module.exports = bh;

@@ -1,0 +1,11 @@
+var BH = require('../../../lib/bh');
+var bh = new BH();
+
+bh.match('root', function (ctx) {
+    ctx
+        .tag('example')
+        .attr('name', 'value')
+        .content('foo');
+});
+
+module.exports = bh;
