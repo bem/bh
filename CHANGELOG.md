@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.3.0
+- Do not add `i-bem` class to element with `js`.
+
 ## 3.2.4
 - Revert 3.2.1 and 3.2.2 patches.
 
