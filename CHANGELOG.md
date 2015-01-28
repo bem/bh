@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.2.4
+- Revert 3.2.1 and 3.2.2 patches.
+
 ## 3.2.3
 - Speed improvement by better escaping (#111).
 - `toHtml`: add mod === 0 to output (#110).
