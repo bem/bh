@@ -15,6 +15,7 @@ BH — это BEMJSON-процессор, который превращает BE
 4. Написан на чистом JavaScript, используется и расширяется через JavaScript.
 5. Прост для понимания, т.к. это обертка над обычными преобразованиями исходного BEMJSON в конечный BEMJSON / HTML.
 6. Компактен на клиенте (12,4 Кб после сжатия, 3,7 Кб после gzip).
+7. Совместим с Express
 
 ## Установка
 
@@ -478,4 +479,36 @@ bh.match('input', function(ctx) {
 bh.match('input__control', function(ctx) {
     ctx.attr('value', ctx.tParam('value'));
 });
+```
+
+# Поддержка Express
+
+BH можно использовать вместе с [Express](http://expressjs.com).
+
+```javascript
+var express = require('express');
+var app = express();
+var bh = require('bh');
+
+// определяем шаблонизатор
+app.engine('bh', bh.__express);
+
+// регистрируем шаблонизатор
+app.set('view engine', 'bh');
+// путь до бандлов с шаблонами
+app.set('views', './bundles');
+
+app.get('/', function (req, res) {
+    // путь до шаблона относительно `./bundles`
+    // расширение файла `.bh` обязательно, `.bh.js` не сработает
+    var pathToTemplate = 'bundleName/bundleName.bh';
+
+    res.locals.bemjson = {block: 'test'};
+    // любые данные для использования внутри шаблонов
+    res.locals.message = 'Use bh with your Express application';
+
+    res.render(pathToTemplate);
+});
+
+app.listen(3000);
 ```
