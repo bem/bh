@@ -228,7 +228,7 @@ describe('bh.toHtml()', function() {
                 mix: [{ block: 'link', js: true }, { elem: 'control', js: { foo: 'bar' } }]
             }).should.equal(
                 '<div class="button link button__control i-bem" ' +
-                    'onclick="return {&quot;link&quot;:{},&quot;button__control&quot;:{&quot;foo&quot;:&quot;bar&quot;}}"' +
+                    'onclick=\'return {"link":{},"button__control":{"foo":"bar"}}\'' +
                 '></div>'
             );
         });
@@ -254,11 +254,11 @@ describe('bh.toHtml()', function() {
         });
         it('should not set `i-bem` class on element', function() {
             bh.apply({ block: 'button', elem: 'control', js: true, content: 'submit' }).should.equal(
-                '<div class="button__control" onclick="return {&quot;button__control&quot;:{}}">submit</div>');
+                '<div class="button__control" onclick=\'return {"button__control":{}}\'>submit</div>');
         });
         it('should not set `i-bem` class on mixed element', function() {
             bh.apply({ block: 'icon', content: 'submit', mix: { block: 'button', elem: 'control', js: true } }).should.equal(
-                '<div class="icon button__control" onclick="return {&quot;button__control&quot;:{}}">submit</div>');
+                '<div class="icon button__control" onclick=\'return {"button__control":{}}\'>submit</div>');
         });
     });
 

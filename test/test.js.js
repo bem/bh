@@ -18,7 +18,7 @@ describe('ctx.js()', function() {
         bh.match('button', function(ctx) {
             ctx.js(true);
         });
-        bh.apply({ block: 'button' }).should.equal('<div class="button i-bem" onclick="return {&quot;button&quot;:{}}"></div>');
+        bh.apply({ block: 'button' }).should.equal('<div class="button i-bem" onclick=\'return {"button":{}}\'></div>');
     });
 
     it('should not set js', function() {
@@ -33,7 +33,7 @@ describe('ctx.js()', function() {
             ctx.js({ a: 2 });
         });
         bh.apply({ block: 'button', js: { x: 1 } })
-            .should.equal('<div class="button i-bem" onclick="return {&quot;button&quot;:{&quot;x&quot;:1,&quot;a&quot;:2}}"></div>');
+            .should.equal('<div class="button i-bem" onclick=\'return {"button":{"x":1,"a":2}}\'></div>');
     });
 
     it('should not override later declarations', function() {
@@ -43,7 +43,7 @@ describe('ctx.js()', function() {
         bh.match('button', function(ctx) {
             ctx.js(true);
         });
-        bh.apply({ block: 'button' }).should.equal('<div class="button i-bem" onclick="return {&quot;button&quot;:{}}"></div>');
+        bh.apply({ block: 'button' }).should.equal('<div class="button i-bem" onclick=\'return {"button":{}}\'></div>');
     });
 
     it('should override later declarations with force flag', function() {
@@ -53,7 +53,7 @@ describe('ctx.js()', function() {
         bh.match('button', function(ctx) {
             ctx.js(false);
         });
-        bh.apply({ block: 'button' }).should.equal('<div class="button i-bem" onclick="return {&quot;button&quot;:{}}"></div>');
+        bh.apply({ block: 'button' }).should.equal('<div class="button i-bem" onclick=\'return {"button":{}}\'></div>');
     });
 
     it('should override user declarations with force flag', function() {
