@@ -9,7 +9,7 @@ describe('options', function() {
         });
         it('should use onclick and js format as default', function() {
             bh.apply({ block: 'button', js: true }).should.equal(
-                '<div class="button i-bem" onclick="return {&quot;button&quot;:{}}"></div>'
+                '<div class="button i-bem" onclick=\'return {"button":{}}\'></div>'
             );
         });
         it('should return current options', function() {
@@ -21,7 +21,7 @@ describe('options', function() {
                 jsAttrName: 'ondblclick'
             });
             bh.apply({ block: 'button', js: true }).should.equal(
-                '<div class="button i-bem" ondblclick="return {&quot;button&quot;:{}}"></div>'
+                '<div class="button i-bem" ondblclick=\'return {"button":{}}\'></div>'
             );
         });
         it('should use onclick as default and use jsAttrScheme option', function() {
@@ -29,7 +29,7 @@ describe('options', function() {
                 jsAttrScheme: 'json'
             });
             bh.apply({ block: 'button', js: true }).should.equal(
-                '<div class="button i-bem" onclick="{&quot;button&quot;:{}}"></div>'
+                '<div class="button i-bem" onclick=\'{"button":{}}\'></div>'
             );
         });
         it('should use jsAttrName and jsAttrScheme options', function() {
@@ -38,7 +38,7 @@ describe('options', function() {
                 jsAttrScheme: 'json'
             });
             bh.apply({ block: 'button', js: true }).should.equal(
-                '<div class="button i-bem" data-bem="{&quot;button&quot;:{}}"></div>'
+                '<div class="button i-bem" data-bem=\'{"button":{}}\'></div>'
             );
         });
     });
