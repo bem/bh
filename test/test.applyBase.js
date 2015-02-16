@@ -20,6 +20,19 @@ describe('ctx.applyBase()', function() {
         );
     });
 
+    it('should apply base matcher for element', function() {
+        bh.match('button__control', function(ctx) {
+            ctx.mod('type', 'span');
+            ctx.applyBase();
+        });
+        bh.match('button__control_type_span', function(ctx) {
+            ctx.tag('span');
+        });
+        bh.apply({ block: 'button', elem: 'control', mods: { disabled: true } }).should.equal(
+            '<span class="button__control button__control_disabled button__control_type_span"></span>'
+        );
+    });
+
     it('should apply base matcher for content', function() {
         bh.match('button', function(ctx) {
             ctx.content([
