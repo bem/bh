@@ -28,3 +28,17 @@ describe('bh.attrEscape()', function() {
         bh.apply({ block: 'button' });
     });
 });
+
+describe('bh.jsAttrEscape()', function() {
+    var bh;
+    beforeEach(function() {
+        bh = new BH();
+    });
+
+    it('should escape xml attr js string', function() {
+        bh.match('button', function() {
+            bh.jsAttrEscape('<b id="a">\'&\'</b>').should.equal('&lt;b id="a"&gt;&#39;&amp;&#39;&lt;/b&gt;');
+        });
+        bh.apply({ block: 'button' });
+    });
+});
