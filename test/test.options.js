@@ -41,5 +41,13 @@ describe('options', function() {
                 '<div class="button i-bem" data-bem=\'{"button":{}}\'></div>'
             );
         });
+        it('should use jsClsName option', function() {
+            bh.setOptions({
+                jsClsName: 'i-test'
+            });
+            bh.apply({ block: 'button', js: true }).should.equal(
+                '<div class="button i-test" onclick="return {&quot;button&quot;:{}}"></div>'
+            );
+        });
     });
 });
