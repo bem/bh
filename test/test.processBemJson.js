@@ -1,7 +1,9 @@
 var BH = require('../lib/bh');
 require('chai').should();
 
-// Standart: http://ru.bem.info/technology/bemjson/
+// Standard:
+//   EN - https://en.bem.info/technology/bemjson/v2/bemjson/
+//   RU - http://ru.bem.info/technology/bemjson/
 
 describe('bh.processBemJson', function() {
     var bh;
