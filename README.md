@@ -133,7 +133,7 @@ bh.match('button_pseudo_yes', function(ctx) {
 });
 ```
 
-In this example, we do not match just to `button` block. We match to `button` block with modifier `pseudo` that has `true` value.
+In this example, we do not match just to `button` block. We match to `button` block with modifier `pseudo` that has `yes` value.
 
 ## Matching
 
@@ -354,7 +354,7 @@ bh.match('input', function(ctx) {
 
 ## ctx.cls([value[, force]])
 
-This class method returns/sets CSS class value depending on arguments.
+This class method returns/sets CSS class value depending on arguments. Use **force** to set the `cls` value even if it was specified earlier.
 
 ```javascript
 bh.match('page', function(ctx) {
@@ -482,7 +482,7 @@ bh.match('search', function(ctx) {
 });
 ```
 
-## ctx.tParam(key[, value])
+## ctx.tParam(key[, value[, force]])
 
 This class method get / passes a parameter into BEMJSON tree. Use **force** to set the parameter value even if it was specified earlier.
 
