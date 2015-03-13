@@ -354,12 +354,16 @@ bh.match('input', function(ctx) {
 
 ## ctx.cls([value[, force]])
 
-This class method returns/sets CSS class value depending on arguments. Use **force** to set the `cls` value even if it was specified earlier.
+This class method returns/sets CSS class additional value depending on arguments. Use **force** to set the `cls` value even if it was specified earlier.
 
 ```javascript
-bh.match('page', function(ctx) {
-    ctx.cls('ua_js_no ua_css_standard');
+bh.match('field_type_email', function(ctx) {
+    ctx.cls('validate');
 });
+```
+
+```html
+<div class="field field_type_email validate"></div>
 ```
 
 ## ctx.content([value[, force]])
