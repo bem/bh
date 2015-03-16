@@ -8,23 +8,23 @@ describe('ctx.mix()', function() {
     });
 
     it('should return mix', function() {
-        var mix = [{ block: 'mix' }];
+        var mix = { block: 'mix' };
         bh.match('button', function(ctx) {
             ctx.mix().should.equal(mix);
         });
         bh.apply({ block: 'button', mix: mix });
     });
 
-    it('should set mix', function() {
+    it('should set single mix', function() {
         bh.match('button', function(ctx) {
-            ctx.mix([{ block: 'mix' }]);
+            ctx.mix({ block: 'mix' });
         });
         bh.apply({ block: 'button' }).should.equal('<div class="button mix"></div>');
     });
 
-    it('should set single mix', function() {
+    it('should set array mix', function() {
         bh.match('button', function(ctx) {
-            ctx.mix({ block: 'mix' });
+            ctx.mix([{ block: 'mix' }]);
         });
         bh.apply({ block: 'button' }).should.equal('<div class="button mix"></div>');
     });
@@ -37,7 +37,7 @@ describe('ctx.mix()', function() {
             .should.equal('<div class="button mix1 mix2"></div>');
     });
 
-    it('should extend user mix', function() {
+    it('should extend user array mix', function() {
         bh.match('button', function(ctx) {
             ctx.mix([{ block: 'mix' }]);
         });
@@ -47,29 +47,29 @@ describe('ctx.mix()', function() {
 
     it('should extend later declarations', function() {
         bh.match('button', function(ctx) {
-            ctx.mix([{ block: 'mix2' }]);
+            ctx.mix({ block: 'mix2' });
         });
         bh.match('button', function(ctx) {
-            ctx.mix([{ block: 'mix1' }]);
+            ctx.mix({ block: 'mix1' });
         });
         bh.apply({ block: 'button' }).should.equal('<div class="button mix1 mix2"></div>');
     });
 
     it('should override later declarations with force flag', function() {
         bh.match('button', function(ctx) {
-            ctx.mix([{ block: 'mix2' }], true);
+            ctx.mix({ block: 'mix2' }, true);
         });
         bh.match('button', function(ctx) {
-            ctx.mix([{ block: 'mix1' }]);
+            ctx.mix({ block: 'mix1' });
         });
         bh.apply({ block: 'button' }).should.equal('<div class="button mix2"></div>');
     });
 
     it('should override user declarations with force flag', function() {
         bh.match('button', function(ctx) {
-            ctx.mix([{ block: 'mix' }], true);
+            ctx.mix({ block: 'mix' }, true);
         });
-        bh.apply({ block: 'button', mix: [{ block: 'user-mix' }] })
+        bh.apply({ block: 'button', mix: { block: 'user-mix' } })
             .should.equal('<div class="button mix"></div>');
     });
 
