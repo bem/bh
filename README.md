@@ -57,7 +57,7 @@ There are two arguments provided to a template function:
 * `ctx` – instance of `Ctx` class;
 * `json` – link to a current BEMJSON tree node.
 
-*NB*: Do not make changes directly in `json` object. Use methods of `ctx` object instead. We recommend you to use `json` object for reading only (see also `ctx.json()` method).
+*N.B.* Do not make changes directly in `json` object. Use methods of `ctx` object instead. We recommend you to use `json` object for reading only (see also `ctx.json()` method).
 
 Syntax:
 
@@ -193,7 +193,7 @@ bh.match('header', function(ctx) {
 });
 ```
 
-*NB*: Any non-undefined value will replace current node in BEMJSON tree. So you can delete current node just returning `null` value.
+*N.B.* Any non-undefined value will replace current node in BEMJSON tree. So you can delete current node just returning `null` value.
 
 Then wrap a content of `button` block with `content` element:
 
@@ -234,6 +234,24 @@ bh.match('button', function(ctx) {
 });
 ```
 
+## Infinite loop detection
+
+The enableInfiniteLoopDetection method allows you to enable or disable the infinite loop detection process.
+
+*N.B.* Enable the infinite loop detection in debugging mode only, because it slows down a template engine application.
+
+```javascript
+bh.enableInfiniteLoopDetection(true);
+bh.match('button', function(ctx) {
+    ctx.content({ block: 'button' });
+});
+```
+
+```
+Error: Infinite matcher loop detected at "button".
+```
+
+
 # `Ctx` class
 
 `Ctx` class instances are passed to all templates. All class methods in a set mode return the class instance.
@@ -250,7 +268,7 @@ bh.match('input', function(ctx) {
 });
 ```
 
-*NB*: If you set a value as `false` or as an empty string, the template will not put the current node to output HTML. The template will put only the content of this node if it exists.
+*N.B.* If you set a value as `false` or as an empty string, the template will not put the current node to output HTML. The template will put only the content of this node if it exists.
 
 ## ctx.mod(key[, value[, force]])
 
@@ -291,7 +309,7 @@ bh.match('input_disabled_yes', function(ctx) {
 });
 ```
 
-*NB*: If an attribute is needed to be deleted and not nulled in its value, you have to pass `null` as a second parameter:
+*N.B.* If an attribute is needed to be deleted and not nulled in its value, you have to pass `null` as a second parameter:
 
 ```javascript
 bh.match('link', function(ctx) {
@@ -382,7 +400,7 @@ bh.match('input', function(ctx) {
 
 Returns the current section of BEMJSON tree. You could use this class method with `return` method for wrapping. For brevity, you can use the second argument of the template function – `json`.
 
-*NB*: The call of `ctx.applyBase()` function breaks the chain of consistent templates application. This causes the case when `json` stops to point out the current node in BEMJSON tree. To avoid this you must use `ctx.json()` method.
+*N.B.* The call of `ctx.applyBase()` function breaks the chain of consistent templates application. This causes the case when `json` stops to point out the current node in BEMJSON tree. To avoid this you must use `ctx.json()` method.
 
 ```javascript
 bh.match('input', function(ctx, json) {
