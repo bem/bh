@@ -193,6 +193,8 @@ bh.match('header', function(ctx) {
 });
 ```
 
+*NB*: Any non-undefined value will replace current node in BEMJSON tree. So you can delete current node just returning `null` value.
+
 Then wrap a content of `button` block with `content` element:
 
 ```javascript
