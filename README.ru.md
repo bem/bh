@@ -143,6 +143,59 @@ bh.match('button_pseudo_yes', function(ctx) {
 'блок[_имяМодификатораБлока[_значениеМодификатораБлока]][__имяЭлемента][_имяМодификатораЭлемента[_значениеМодификатораЭлемента]]'
 ```
 
+## Настройка
+
+Метод `setOptions` позволяет задавать параметры шаблонизации.
+
+### jsAttrName
+
+Позволяет задать имя атрибута для хранения поля `js`. Значение по умолчанию — `onclick`.
+
+```javascript
+bh.setOptions({ jsAttrName: 'data-bem' });
+bh.apply({ block: 'button', js: true });
+```
+```html
+<div class="button i-bem" data-bem='return {"button":{}}'></div>
+```
+
+### jsAttrScheme
+
+Формат хранения данных в атрибуте. По умолчанию `js`
+
+```javascript
+bh.setOptions({ jsAttrScheme: 'json' });
+bh.apply({ block: 'button', js: { foo: bar } });
+```
+```html
+<div class="button i-bem" onclick='{"button":{"foo":"bar"}}'></div>
+```
+
+### jsCls
+
+Имя дополнительного класса для узлов, имеющих `js`. По умолчанию `i-bem`.
+Если передать значение `false`, дополнительный класс не будет добавляться.
+
+```javascript
+bh.setOptions({ jsCls: false });
+bh.apply({ block: 'button', js: true });
+```
+```html
+<div class="button" onclick='{"button":{}}'></div>
+```
+
+### escapeContent
+
+Включает эскейпинг содержимого. По умолчанию выключен.
+
+```javascript
+bh.setOptions({ escapeContent: true });
+bh.apply({ content: '<script>' });
+```
+```html
+<div>&lt;script&gt;</div>
+```
+
 ## Дополнительные примеры
 
 Например, мы хотим установить модификатор `state` со значением `closed` для всех блоков `popup`:
