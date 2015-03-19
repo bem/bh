@@ -149,6 +149,62 @@ In English:
 'block[_blockModifierName[_blockModifierValue]][__elementName][_elementModifierName[_elementModifierValue]]'
 ```
 
+## Setting up
+
+The `setOptions` method allows you to set the template engine parameters.
+
+### jsAttrName
+
+`jsAttrName` allows you to set the attribute name to store the `js` field. Default value — `onclick`.
+
+```javascript
+bh.setOptions({ jsAttrName: 'data-bem' });
+bh.apply({ block: 'button', js: true });
+```
+
+```html
+<div class="button i-bem" data-bem='return {"button":{}}'></div>
+```
+
+### jsAttrScheme
+
+The data store format in the attribute. By default — `js`.
+
+```javascript
+bh.setOptions({ jsAttrScheme: 'json' });
+bh.apply({ block: 'button', js: { foo: bar } });
+```
+
+```html
+<div class="button i-bem" onclick='{"button":{"foo":"bar"}}'></div>
+```
+
+### jsCls
+
+The name of additional class for nodes with `js`. By default — `i-bem`. If you set the `false` value, the additional class will not add.
+
+```javascript
+bh.setOptions({ jsCls: false });
+bh.apply({ block: 'button', js: true });
+```
+```html
+<div class="button" onclick='{"button":{}}'></div>
+```
+
+### escapeContent
+
+`escapeContent` turns on the characters escaping. Option is turned off by default.
+
+```javascript
+bh.setOptions({ escapeContent: true });
+bh.apply({ content: '&lt;script&gt;' });
+
+```
+
+```html
+<div>&lt;script&gt;</div>
+```
+
 ## Additional examples
 
 For example, if you want to set `state` modifier with `closed` value for all blocks do the following:
@@ -236,7 +292,7 @@ bh.match('button', function(ctx) {
 
 ## Infinite loop detection
 
-The enableInfiniteLoopDetection method allows you to enable or disable the infinite loop detection process.
+The `enableInfiniteLoopDetection` method allows you to enable or disable the infinite loop detection process.
 
 *N.B.* Enable the infinite loop detection in debugging mode only, because it slows down a template engine application.
 
