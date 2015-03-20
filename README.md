@@ -155,7 +155,7 @@ The `setOptions` method allows you to set the template engine parameters.
 
 ### jsAttrName
 
-`jsAttrName` allows you to set the attribute name to store the `js` field. Default value — `onclick`.
+`jsAttrName` allows you to set the attribute name to store the `js` field. Default value is `onclick`.
 
 ```javascript
 bh.setOptions({ jsAttrName: 'data-bem' });
@@ -168,7 +168,7 @@ bh.apply({ block: 'button', js: true });
 
 ### jsAttrScheme
 
-The data store format in the attribute. By default — `js`.
+The data store format in the attribute. Default value is `js`.
 
 ```javascript
 bh.setOptions({ jsAttrScheme: 'json' });
@@ -181,7 +181,7 @@ bh.apply({ block: 'button', js: { foo: bar } });
 
 ### jsCls
 
-The name of additional class for nodes with `js`. By default — `i-bem`. If you set the `false` value, the additional class will not add.
+The name of additional class for nodes with `js`. Default value is `i-bem`. If you set the `false` value, the additional class will not be added.
 
 ```javascript
 bh.setOptions({ jsCls: false });
@@ -193,7 +193,7 @@ bh.apply({ block: 'button', js: true });
 
 ### escapeContent
 
-`escapeContent` turns on the characters escaping. Option is turned off by default.
+`escapeContent` turns on content escaping. Option is turned off by default.
 
 ```javascript
 bh.setOptions({ escapeContent: true });
