@@ -60,5 +60,25 @@ describe('options', function() {
                 '<div class="button" onclick=\'return {"button":{}}\'></div>'
             );
         });
+
+        it('should use clsNobaseMods options', function() {
+            bh.setOptions({ clsNobaseMods: true });
+            bh.apply({
+                block: 'button',
+                mods: { disabled: true, theme: 'new' },
+                mix: [
+                    { block: 'clearfix' },
+                    { elem: 'box', elemMods: { pick: 'left' } }
+                ],
+                content: {
+                    elem: 'control',
+                    elemMods: { disabled: true }
+                }
+            }).should.equal(
+                '<div class="button _disabled _theme_new clearfix button__box _pick_left">' +
+                    '<div class="button__control _disabled"></div>' +
+                '</div>'
+            );
+        });
     });
 });
