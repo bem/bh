@@ -124,8 +124,7 @@ describe('bh.toHtml()', function() {
                 attrs: { href: '<script type="javascript">window && alert(document.cookie)</script>' },
                 content: 'link'
             }).should.equal(
-                '<a href="&lt;script type=&quot;javascript&quot;&gt;window &amp;&amp; ' +
-                'alert(document.cookie)&lt;/script&gt;">link</a>');
+                '<a href="<script type=&quot;javascript&quot;>window &amp;&amp; alert(document.cookie)</script>">link</a>');
         });
     });
 
