@@ -297,7 +297,15 @@ Error: Infinite matcher loop detected at "button".
 
 Инстанции класса `Ctx` передаются во все шаблоны. Все методы класса в set-режиме возвращают инстанцию класса, то есть реализуют чейнинг.
 
-Рассмотрим методы класса:
+## ctx.process(bemJson)
+
+Применяет шаблоны для переданного BEMJSON-дерева в текущем контексте. Возвращает результат преобразований.
+
+```javascript
+bh.match('button', function(ctx) {
+    bh.toHtml(ctx.process({ elem: 'control' }));
+});
+```
 
 ## ctx.tag([value[, force]])
 

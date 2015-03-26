@@ -312,7 +312,15 @@ Error: Infinite matcher loop detected at "button".
 
 `Ctx` class instances are passed to all templates. All class methods in a set mode return the class instance.
 
-Let's examine the class methods:
+## ctx.process(bemJson)
+
+This class method applies templates for given BEMJSON tree in the current context. It returns the processed BEMJSON.
+
+```javascript
+bh.match('button', function(ctx) {
+    bh.toHtml(ctx.process({ elem: 'control' }));
+});
+```
 
 ## ctx.tag([value[, force]])
 
