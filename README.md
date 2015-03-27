@@ -137,16 +137,10 @@ In this example, we do not match just to `button` block. We match to `button` bl
 
 ## Matching
 
-Let's go into details of syntax of a matching string for conversion functions (optional parameters are set in square brackets) :
+Let's go into details of syntax of a matching string for conversion functions (optional parameters are set in square brackets):
 
 ```javascript
 'block[_blockModName[_blockModVal]][__elemName][_elemModName[_elemModVal]]'
-```
-
-In English:
-
-```javascript
-'block[_blockModifierName[_blockModifierValue]][__elementName][_elementModifierName[_elementModifierValue]]'
 ```
 
 ## Setting up
