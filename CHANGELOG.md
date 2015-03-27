@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.0.0
+- Added global matcher support: `beforeEach` and `afterEach` (#121).
+- Added `ctx.process` method (#135).
+- Add `i-bem` class to element with `js` (#122).
+- No-base modifier classes supported (#132).
+- Wrap data-bem attribute by single quotes (#115).
+- `processBemJson` now return standart BEMJSON (#96).
+- Readme updates (#131, #124, #123, #120).
+- Escaping optimizations (#137).
+
 ## 3.3.0
 - Do not add `i-bem` class to element with `js`.
 
