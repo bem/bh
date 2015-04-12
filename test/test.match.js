@@ -157,7 +157,7 @@ describe('bh.match()', function() {
         );
     });
 
-    it('should not respect matches order', function() {
+    it('should not respect block matches order (1)', function() {
         bh.match('button_foo', function(ctx) {
             ctx.content('mod');
         });
@@ -168,6 +168,34 @@ describe('bh.match()', function() {
 
         bh.apply({ block: 'button', mods: { foo: true } }).should.equal(
             '<div class="button button_foo">mod</div>'
+        );
+    });
+
+    it('should not respect block matches order (2)', function() {
+        bh.match('button', function(ctx) {
+            ctx.content('base');
+        });
+
+        bh.match('button_foo', function(ctx) {
+            ctx.content('mod');
+        });
+
+        bh.apply({ block: 'button', mods: { foo: true } }).should.equal(
+            '<div class="button button_foo">mod</div>'
+        );
+    });
+
+    it('should not respect element matches order', function() {
+        bh.match('button__element_foo', function(ctx) {
+            ctx.content('mod');
+        });
+
+        bh.match('button__element', function(ctx) {
+            ctx.content('base');
+        });
+
+        bh.apply({ block: 'button', elem: 'element', elemMods: { foo: true } }).should.equal(
+            '<div class="button__element button__element_foo">mod</div>'
         );
     });
 });
