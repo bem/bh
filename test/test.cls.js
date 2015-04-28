@@ -18,6 +18,12 @@ describe('ctx.cls()', function() {
         });
         bh.apply({ block: 'button' }).should.equal('<div class="button btn"></div>');
     });
+    it('should trim cls', function() {
+        bh.match('button', function(ctx) {
+            ctx.cls('  btn  ');
+        });
+        bh.apply({ block: 'button' }).should.equal('<div class="button btn"></div>');
+    });
     it('should escape cls', function() {
         bh.match('button', function(ctx) {
             ctx.cls('url="a=b&c=d"');
