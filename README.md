@@ -375,6 +375,14 @@ bh.match('link', function(ctx) {
 });
 ```
 
+*N.B.* Pass `true` as a second parameter to set a boolean attribute:
+
+```javascript
+bh.match('link_hidden_yes', function(ctx) {
+    ctx.attr('hidden', true);
+});
+```
+
 ## ctx.attrs([values[, force]])
 
 This class method returns/sets attributes depending on arguments. Use **force** to set the attributes even if they were specified earlier.
