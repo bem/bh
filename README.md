@@ -191,10 +191,8 @@ bh.apply({ block: 'button', js: true });
 
 ```javascript
 bh.setOptions({ escapeContent: true });
-bh.apply({ content: '&lt;script&gt;' });
-
+bh.apply({ content: '<script>' });
 ```
-
 ```html
 <div>&lt;script&gt;</div>
 ```
