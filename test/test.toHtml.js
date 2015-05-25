@@ -2,6 +2,24 @@ var BH = require('../lib/bh');
 require('chai').should();
 
 describe('bh.toHtml()', function() {
+    describe('json.toHtml', function() {
+        var bh;
+        beforeEach(function() {
+            bh = new BH();
+        });
+
+        it('should redefine `toHtml` method for only node', function() {
+            bh.match('doctype', function(ctx) {
+                var type = ctx.mod('type');
+                return { toHtml: function() { return '<!DOCTYPE ' + type + '>'; } };
+            });
+            bh.apply([
+                { block: 'doctype', mods: { type: 'html' } },
+                { block: 'page' }
+            ]).should.equal('<!DOCTYPE html><div class="page"></div>');
+        });
+    });
+
     describe('content', function() {
         var bh;
         beforeEach(function() {
@@ -39,8 +57,16 @@ describe('bh.toHtml()', function() {
         it('should prefer `html` field', function() {
             bh.apply({
                 content: '<br/>',
-                html: '<br/>'
-            }).should.equal('<div><br/></div>');
+                html: '<hr/>'
+            }).should.equal('<div><hr/></div>');
+        });
+
+        it('should prefer `html` field when tag is empty', function() {
+            bh.apply({
+                tag: '',
+                content: '<br/>',
+                html: '<hr/>'
+            }).should.equal('<hr/>');
         });
     });
 
