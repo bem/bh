@@ -259,6 +259,10 @@ describe('bh.toHtml()', function() {
             bh.apply({ block: 'icon', content: 'submit', mix: { block: 'button', elem: 'control', js: true } }).should.equal(
                 '<div class="icon button__control i-bem" onclick=\'return {"button__control":{}}\'>submit</div>');
         });
+        it('should set `i-bem` class on mixed block', function() {
+            bh.apply({ block: 'button', elem: 'box', content: 'submit', mix: { block: 'icon', js: true } }).should.equal(
+                '<div class="button__box icon i-bem" onclick=\'return {"icon":{}}\'>submit</div>');
+        });
     });
 
     describe('cls', function() {

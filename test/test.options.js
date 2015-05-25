@@ -61,6 +61,19 @@ describe('options', function() {
             );
         });
 
+        it('should use jsElem option', function() {
+            bh.setOptions({ jsElem: false });
+            bh.apply({ block: 'button', elem: 'box', js: true }).should.equal(
+                '<div class="button__box" onclick=\'return {"button__box":{}}\'></div>'
+            );
+        });
+
+        it('should use jsElem option for mixed element', function() {
+            bh.setOptions({ jsElem: false });
+            bh.apply({ block: 'button', elem: 'box', mix: { block: 'icon', elem: 'wrap', js: true } }).should.equal(
+                '<div class="button__box icon__wrap" onclick=\'return {"icon__wrap":{}}\'></div>');
+        });
+
         it('should use clsNobaseMods options', function() {
             bh.setOptions({ clsNobaseMods: true });
             bh.apply({
