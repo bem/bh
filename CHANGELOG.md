@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.1.0
+- Ability to replace `toHtml` method for only node (#144).
+- Added `jsElem` option (#148).
+- Boolean attributes supported (#145).
+- Trim `cls` (#143).
+
 ## 4.0.0
 - Added global matcher support: `beforeEach` and `afterEach` (#121).
 - Added `ctx.process` method (#135).
