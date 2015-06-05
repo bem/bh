@@ -2,12 +2,12 @@ var BH = require('../lib/bh');
 require('chai').should();
 
 describe('options', function() {
-    describe('jsAttr', function() {
-        var bh;
-        beforeEach(function() {
-            bh = new BH();
-        });
+    var bh;
+    beforeEach(function() {
+        bh = new BH();
+    });
 
+    describe('jsAttr', function() {
         it('should use onclick and js format as default', function() {
             bh.apply({ block: 'button', js: true }).should.equal(
                 '<div class="button i-bem" onclick=\'return {"button":{}}\'></div>'
@@ -74,9 +74,13 @@ describe('options', function() {
                 '<div class="button__box icon__wrap" onclick=\'return {"icon__wrap":{}}\'></div>');
         });
 
-        it('should use clsNobaseMods options', function() {
-            bh.setOptions({ clsNobaseMods: true });
-            bh.apply({
+    });
+
+    describe('custom bem syntax', function() {
+        var button;
+
+        beforeEach(function() {
+            button = {
                 block: 'button',
                 mods: { disabled: true, theme: 'new' },
                 mix: [
@@ -87,9 +91,32 @@ describe('options', function() {
                     elem: 'control',
                     elemMods: { disabled: true }
                 }
-            }).should.equal(
+            };
+        });
+
+        it('should use clsNobaseMods options', function() {
+            bh.setOptions({ clsNobaseMods: true });
+            bh.apply(button).should.equal(
                 '<div class="button _disabled _theme_new clearfix button__box _pick_left">' +
                     '<div class="button__control _disabled"></div>' +
+                '</div>'
+            );
+        });
+
+        it('should use delimElem option', function() {
+            bh.setOptions({ delimElem: '--' });
+            bh.apply(button).should.equal(
+                '<div class="button button_disabled button_theme_new clearfix button--box button--box_pick_left">' +
+                    '<div class="button--control button--control_disabled"></div>' +
+                '</div>'
+            );
+        });
+
+        it('should use delimMod option', function() {
+            bh.setOptions({ delimMod: '-' });
+            bh.apply(button).should.equal(
+                '<div class="button button-disabled button-theme-new clearfix button__box button__box-pick-left">' +
+                    '<div class="button__control button__control-disabled"></div>' +
                 '</div>'
             );
         });

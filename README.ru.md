@@ -196,6 +196,30 @@ bh.apply({ content: '<script>' });
 <div>&lt;script&gt;</div>
 ```
 
+### delimElem
+
+Задает разделитель между блоком и элементом. По умолчанию `__`.
+
+```javascript
+bh.setOptions({ delimElem: '_' });
+bh.apply({ block: 'button', elem: 'text' });
+```
+```html
+<div class="button_text"></div>
+```
+
+### delimMod
+
+Задает разделитель между блоком или элементом и их модификатором. По умолчанию `_`.
+
+```javascript
+bh.setOptions({ delimMod: '--' });
+bh.apply({ block: 'button', mods: { disabled: true } });
+```
+```html
+<div class="button button--disabled"></div>
+```
+
 ## Дополнительные примеры
 
 Например, мы хотим установить модификатор `state` со значением `closed` для всех блоков `popup`:
