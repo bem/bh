@@ -221,6 +221,24 @@ bh.apply({ block: 'button', mods: { disabled: true } });
 <div class="button button--disabled"></div>
 ```
 
+## External modules
+
+To external modules are available in templates need to write them into namespace `bh.lib`.
+
+```javascript
+bh.lib.i18n = BEM.I18N;
+```
+
+To get the external module in templates need to use `bh.require ('depend-name')` method.
+
+```javascript
+var i18n = bh.require('i18n');
+
+bh.match('button', function (ctx) {
+    ctx.content(i18n('button', 'action'));
+});
+```
+
 ## Additional examples
 
 For example, if you want to set `state` modifier with `closed` value for all blocks do the following:

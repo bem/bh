@@ -220,6 +220,24 @@ bh.apply({ block: 'button', mods: { disabled: true } });
 <div class="button button--disabled"></div>
 ```
 
+## Внешние модули
+
+Чтобы внешние модули были доступны в коде шаблонов нужно записать их в `bh.lib`.
+
+```javascript
+bh.lib.i18n = BEM.I18N;
+```
+
+Для получения внешнего модуля в коде шаблонов следует использовать `bh.require('depend-name')` метод.
+
+```javascript
+var i18n = bh.require('i18n');
+
+bh.match('button', function (ctx) {
+    ctx.content(i18n('button', 'action'));
+});
+```
+
 ## Дополнительные примеры
 
 Например, мы хотим установить модификатор `state` со значением `closed` для всех блоков `popup`:
