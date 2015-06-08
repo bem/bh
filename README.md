@@ -197,6 +197,30 @@ bh.apply({ content: '<script>' });
 <div>&lt;script&gt;</div>
 ```
 
+### delimElem
+
+Defines the delimiter between block and element names. Default value is `__`.
+
+```javascript
+bh.setOptions({ delimElem: '_' });
+bh.apply({ block: 'button', elem: 'text' });
+```
+```html
+<div class="button_text"></div>
+```
+
+### delimMod
+
+Defines the delimiter between block or element and they modifier. Default value is `_`.
+
+```javascript
+bh.setOptions({ delimMod: '--' });
+bh.apply({ block: 'button', mods: { disabled: true } });
+```
+```html
+<div class="button button--disabled"></div>
+```
+
 ## Additional examples
 
 For example, if you want to set `state` modifier with `closed` value for all blocks do the following:
