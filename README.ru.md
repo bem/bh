@@ -34,7 +34,9 @@ module.exports = function(bh) {
 };
 ```
 
-Для преобразования исходного дерева BEMJSON в конечный HTML используется метод `apply`. Для получения промежуточного результата в виде развернутого BEMJSON-дерева нужно использовать метод `processBemJson`.
+Для преобразования исходного дерева BEMJSON в конечный HTML используется метод `apply`.
+Для получения промежуточного результата в виде развернутого BEMJSON-дерева нужно использовать метод `processBemJson`.
+Для получения конечного HTML без преобразования BEMJSON-дерева используется метод `toHtml`.
 
 Простой пример использования:
 ```javascript
@@ -44,6 +46,7 @@ bh.match('button', function(ctx) {
 })
 bh.processBemJson({ block: 'button' }); // { block: 'button', mods: {}, tag: 'button' }
 bh.apply({ block: 'button' }); // '<button class="button"></button>'
+bh.toHtml({ block: 'button' }); // '<div class="button"></div>'
 ```
 
 ## Преобразования

@@ -12,11 +12,11 @@ BH is processor that converts BEMJSON to HTML. Or in other words a template engi
 BH is:
 
 1. fast;
-1. easy to debug due to no need of compilation to another code;
-1. based on JavaScript (usage and extensions);
-1. easy to understand – it is a wrapper over a regular conversion of source BEMJSON to output BEMJSON / HTML;
-1. compact on client side (12.4 Kb after compression, 3.7 Kb after gzip);
-1. does not require a compilation.
+2. easy to debug due to no need of compilation to another code;
+3. based on JavaScript (usage and extensions);
+4. easy to understand – it is a wrapper over a regular conversion of source BEMJSON to output BEMJSON / HTML;
+5. compact on client side (12.4 Kb after compression, 3.7 Kb after gzip);
+6. does not require a compilation.
 
 ## Install
 
@@ -36,7 +36,9 @@ module.exports = function(bh) {
 };
 ```
 
-Use `apply` method to convert source tree of BEMJSON into an output HTML. Use `processBemJson` method to get an interim result in detailed BEMJSON tree form.
+Use `apply` method to convert source tree of BEMJSON into an output HTML.
+Use `processBemJson` method to get an interim result in detailed BEMJSON tree form.
+Use `toHtml` method to get an output HTML without BEMJSON tree transform.
 
 Common use case:
 
@@ -47,6 +49,7 @@ bh.match('button', function(ctx) {
 })
 bh.processBemJson({ block: 'button' }); // { block: 'button', mods: {}, tag: 'button' }
 bh.apply({ block: 'button' }); // '<button class="button"></button>'
+bh.toHtml({ block: 'button' }); // '<div class="button"></div>'
 ```
 
 ## Conversion
