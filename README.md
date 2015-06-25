@@ -224,6 +224,14 @@ bh.apply({ block: 'button', mods: { disabled: true } });
 <div class="button button--disabled"></div>
 ```
 
+### shortTags
+
+`shortTags` extend default short tag list.
+
+```javascript
+bh.setOptions({ shortTags: ['rect'] });
+```
+
 ## Additional examples
 
 For example, if you want to set `state` modifier with `closed` value for all blocks do the following:
