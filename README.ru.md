@@ -223,6 +223,14 @@ bh.apply({ block: 'button', mods: { disabled: true } });
 <div class="button button--disabled"></div>
 ```
 
+### shortTags
+
+`shortTags` расширяет стандартный набор коротких тегов.
+
+```javascript
+bh.setOptions({ shortTags: ['rect'] });
+```
+
 ## Дополнительные примеры
 
 Например, мы хотим установить модификатор `state` со значением `closed` для всех блоков `popup`:

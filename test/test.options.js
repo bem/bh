@@ -120,5 +120,10 @@ describe('options', function() {
                 '</div>'
             );
         });
+
+        it('should use extended short tags', function() {
+            bh.setOptions({ shortTags: ['rect'] });
+            bh.apply({ tag: 'rect' }).should.equal('<rect/>');
+        });
     });
 });
