@@ -187,6 +187,19 @@ bh.apply({ block: 'button', js: true });
 <div class="button" onclick='{"button":{}}'></div>
 ```
 
+### jsElem
+
+Регулирует установку дополнительного класса, указанного в параметре [jsCls](https://github.com/bem/bh/blob/master/README.ru.md#jscls), для элемента с `js`-реализацией. По умолчанию `true`. Если задать значение `false`, дополнительный класс добавляться не будет.
+
+```javascript
+bh.setOptions({ jsElem: false });
+bh.apply({ block: 'button', elem: 'box', js: true });
+```
+
+```html
+<div class="button__box" onclick='return {"button__box":{}}'></div>
+```
+
 ### escapeContent
 
 Включает эскейпинг содержимого. По умолчанию выключен.
@@ -197,6 +210,31 @@ bh.apply({ content: '<script>' });
 ```
 ```html
 <div>&lt;script&gt;</div>
+```
+
+### clsNobaseMods
+
+Удаляет имя блока и/или элемента из имен модификаторов в классе. По умолчанию `false`.
+
+```javascript
+bh.setOptions({ clsNobaseMods: true });
+bh.apply({
+    block: 'button',
+    mods: { disabled: true, theme: 'new' },
+    mix: [
+        { block: 'clearfix' },
+        { elem: 'box', elemMods: { pick: 'left' } }
+    ],
+    content: {
+        elem: 'control',
+        elemMods: { disabled: true }
+    }
+});
+```
+```html
+<div class="button _disabled _theme_new clearfix button__box _pick_left">
+    <div class="button__control _disabled"></div>
+</div>
 ```
 
 ### delimElem

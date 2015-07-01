@@ -188,6 +188,20 @@ bh.apply({ block: 'button', js: true });
 <div class="button" onclick='{"button":{}}'></div>
 ```
 
+### jsElem
+
+`jsElem` controls the set up of an additional class of the [jsCls](https://github.com/bem/bh/blob/master/README.md#jscls) parameter for elements with `js`. Default value is `true`. If you set the `false` value, the additional class will not be added.
+
+```javascript
+bh.setOptions({ jsElem: false });
+bh.apply({ block: 'button', elem: 'box', js: true });
+```
+
+```html
+<div class="button__box" onclick='return {"button__box":{}}'></div>
+```
+
+
 ### escapeContent
 
 `escapeContent` turns on content escaping. Option is turned off by default.
@@ -198,6 +212,31 @@ bh.apply({ content: '<script>' });
 ```
 ```html
 <div>&lt;script&gt;</div>
+```
+
+### clsNobaseMods
+
+`clsNobaseMods` removes the block or element name from the modifier names in the class. Default value is `false`.
+
+```javascript
+bh.setOptions({ clsNobaseMods: true });
+bh.apply({
+    block: 'button',
+    mods: { disabled: true, theme: 'new' },
+    mix: [
+        { block: 'clearfix' },
+        { elem: 'box', elemMods: { pick: 'left' } }
+    ],
+    content: {
+        elem: 'control',
+        elemMods: { disabled: true }
+    }
+});
+```
+```html
+<div class="button _disabled _theme_new clearfix button__box _pick_left">
+    <div class="button__control _disabled"></div>
+</div>
 ```
 
 ### delimElem
