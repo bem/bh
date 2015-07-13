@@ -3,20 +3,26 @@ require('chai').should();
 
 describe('options', function() {
     var bh;
+
     beforeEach(function() {
         bh = new BH();
     });
 
-    describe('jsAttr', function() {
+    it('should return current options', function() {
+        bh.setOptions({ foo: 'bar' });
+        bh.getOptions().foo.should.equal('bar');
+    });
+
+    it('should use extended short tags', function() {
+        bh.setOptions({ shortTags: ['rect'] });
+        bh.apply({ tag: 'rect' }).should.equal('<rect/>');
+    });
+
+    describe('js related attrs and names', function() {
         it('should use onclick and js format as default', function() {
             bh.apply({ block: 'button', js: true }).should.equal(
                 '<div class="button i-bem" onclick=\'return {"button":{}}\'></div>'
             );
-        });
-
-        it('should return current options', function() {
-            bh.setOptions({ foo: 'bar' });
-            bh.getOptions().foo.should.equal('bar');
         });
 
         it('should use js format as default and use jsAttrName option', function() {
@@ -73,7 +79,6 @@ describe('options', function() {
             bh.apply({ block: 'button', elem: 'box', mix: { block: 'icon', elem: 'wrap', js: true } }).should.equal(
                 '<div class="button__box icon__wrap" onclick=\'return {"icon__wrap":{}}\'></div>');
         });
-
     });
 
     describe('custom bem syntax', function() {
@@ -119,11 +124,6 @@ describe('options', function() {
                     '<div class="button__control button__control-disabled"></div>' +
                 '</div>'
             );
-        });
-
-        it('should use extended short tags', function() {
-            bh.setOptions({ shortTags: ['rect'] });
-            bh.apply({ tag: 'rect' }).should.equal('<rect/>');
         });
     });
 });
