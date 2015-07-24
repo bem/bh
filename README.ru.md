@@ -446,6 +446,9 @@ bh.match('link_hidden_yes', function(ctx) {
     ctx.attr('hidden', true);
 });
 ```
+```html
+<div class="link link_hidden_yes" hidden></div>
+```
 
 ## ctx.attrs([values[, force]])
 
