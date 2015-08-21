@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.1.2
+- Fixed bug with `ctx.js()` (#160).
+
 ## 4.1.1
 - Some documentation fixes.
 - Added `shortTags` option (#149).
