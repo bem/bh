@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.3.2
+- Fixed bug with `ctx.js()` (#162).
+
 ## 3.3.1
 - Fixed bug with `ctx.js()` (#160).
 
