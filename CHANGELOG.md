@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.3.1
+- Fixed bug with `ctx.js()` (#160).
+
 ## 3.3.0
 - Do not add `i-bem` class to element with `js`.
 
