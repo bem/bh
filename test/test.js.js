@@ -43,6 +43,13 @@ describe('ctx.js()', function() {
             .should.equal('<div class="button i-bem" onclick="return {&quot;button&quot;:{&quot;x&quot;:1,&quot;a&quot;:2}}"></div>');
     });
 
+    it('should extend user js, when it equal true', function() {
+        bh.match('button', function(ctx) {
+            ctx.js({ a: 1 });
+        });
+        bh.apply({ block: 'button', js: true }).should.equal('<div class="button i-bem" onclick=\'return {"button":{"a":1}}\'></div>');
+    });
+
     it('should not override later declarations #1', function() {
         bh.match('button', function(ctx) {
             ctx.js(false);
