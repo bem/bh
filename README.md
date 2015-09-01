@@ -564,7 +564,7 @@ See example for `ctx.position()`, `ctx.isFirst()`, and `ctx.isLast()` below.
 ## ctx.isLast()
 **ctx.isLast()** returns `true` if the current BEMJSON element is the last within the parental BEMJSON element.
 
-Example for `ctx.position()`, `ctx.isFirst()`, and, `ctx.isLast()`:
+Example for `ctx.position()`, `ctx.isFirst()`, and `ctx.isLast()`:
 
 ```javascript
 bh.match('list__item', function(ctx) {
@@ -633,7 +633,7 @@ bh.match('button', function(ctx) {
 
 ## ctx.generateId()
 
-This class method returns the unique identifier. For example, you can use it to set the correspondence between `label` and ` input`.
+This class method returns the unique identifier. For example, you can use it to set the correspondence between `label` and `input`.
 
 ## ctx.param(key[, value[, force]])
 
