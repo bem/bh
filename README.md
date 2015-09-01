@@ -253,7 +253,7 @@ bh.apply({ block: 'button', elem: 'text' });
 
 ### delimMod
 
-Defines the delimiter between block or element and they modifier. Default value is `_`.
+Defines the delimiter between block or element and their modifier. Default value is `_`.
 
 ```javascript
 bh.setOptions({ delimMod: '--' });
@@ -273,7 +273,7 @@ bh.setOptions({ shortTags: ['rect'] });
 
 ## Additional examples
 
-For example, if you want to set `state` modifier with `closed` value for all blocks do the following:
+For example, if you want to set `state` modifier with `closed` value for all blocks, do the following:
 
 ```javascript
 bh.match('popup', function(ctx) {
@@ -555,16 +555,16 @@ bh.match('input', function(ctx, json) {
 
 ## ctx.position()
 **ctx.position()** returns the position of the current BEMJSON element within parental element.
-See example for `ctx.position()`, `ctx.isFirst()` and `ctx.isLast()` below.
+See example for `ctx.position()`, `ctx.isFirst()`, and `ctx.isLast()` below.
 
 ## ctx.isFirst()
 **ctx.isFirst()** returns `true` if the current BEMJSON element is the first within the parental BEMJSON element.
-See example for `ctx.position()`, `ctx.isFirst()` and `ctx.isLast()` below.
+See example for `ctx.position()`, `ctx.isFirst()`, and `ctx.isLast()` below.
 
 ## ctx.isLast()
 **ctx.isLast()** returns `true` if the current BEMJSON element is the last within the parental BEMJSON element.
 
-Example for `ctx.position()`, `ctx.isFirst()` and `ctx.isLast()`:
+Example for `ctx.position()`, `ctx.isFirst()`, and, `ctx.isLast()`:
 
 ```javascript
 bh.match('list__item', function(ctx) {
@@ -633,7 +633,7 @@ bh.match('button', function(ctx) {
 
 ## ctx.generateId()
 
-This class method returns the unique identifier. For example, you can use it to set the correspondence between `label` and` input`.
+This class method returns the unique identifier. For example, you can use it to set the correspondence between `label` and ` input`.
 
 ## ctx.param(key[, value[, force]])
 
