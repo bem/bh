@@ -7,6 +7,10 @@ describe('ctx.html()', function() {
         bh = new BH();
     });
 
+    it('should prefer html over content', function() {
+        bh.apply({ tag: false, html: 'Hello', content: 'Bye' }).should.equal('Hello');
+    });
+
     it('should return bemjson html', function() {
         bh.match('button', function(ctx) {
             ctx.html().should.equal('Hello');
