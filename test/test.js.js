@@ -47,7 +47,7 @@ describe('ctx.js()', function() {
         bh.match('button', function(ctx) {
             ctx.js({ a: 1 });
         });
-        bh.apply({ block: 'button', js: true }).should.equal('<div class="button i-bem" onclick=\'return {"button":{"a":1}}\'></div>');
+        bh.apply({ block: 'button', js: true }).should.equal('<div class="button i-bem" onclick="return {&quot;button&quot;:{&quot;a&quot;:1}}"></div>');
     });
 
     it('should not override later declarations #1', function() {
