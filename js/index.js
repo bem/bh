@@ -1,4 +1,16 @@
-function BHController($scope) {
+function BHController($scope, $location) {
+
+    var defaultData = {
+        inputBemjson: '{ block: \'button\', content: \'Кнопка\' }',
+        inputMatchers: 'bh.match(\'button\', function(ctx) {\n' +
+            '    ctx.tag(\'button\');\n' +
+            '    ctx.attr(\'role\', \'button\');\n' +
+            '    ctx.content({\n' +
+            '        elem: \'text\',\n' +
+            '        content: ctx.content()\n' +
+            '    }, true);\n' +
+            '});\n'
+    };
 
     $scope.compiledHtml = function() {
         $scope.error = '';
@@ -27,21 +39,14 @@ function BHController($scope) {
         return res;
     };
 
-    $scope.loadSettings = function(settings) {
-        $scope.data = angular.fromJson(settings);
-        $scope.data.inputBemjson = $scope.data.inputBemjson || '{ block: \'button\', content: \'Кнопка\' }';
-        $scope.data.inputMatchers = $scope.data.inputMatchers ||
-            'bh.match(\'button\', function(ctx) {\n' +
-            '    ctx.tag(\'button\');\n' +
-            '    ctx.attr(\'role\', \'button\');\n' +
-            '    ctx.content({\n' +
-            '        elem: \'text\',\n' +
-            '        content: ctx.content()\n' +
-            '    }, true);\n' +
-            '});\n';
+    $scope.loadSettings = function() {
+        var storedData = angular.fromJson(localStorage['bh-config-settings-2'] || '{}');
+        var urlData = $location.search();
+        $scope.data = angular.extend({}, defaultData, storedData, urlData);
     };
-    $scope.loadSettings(localStorage['bh-config-settings-2'] || '{}');
-    window.setInterval(function() {
+    $scope.loadSettings();
+    $scope.$watchCollection('data', function(data) {
+        $location.search($scope.data);
         localStorage['bh-config-settings-2'] = angular.toJson($scope.data);
-    }, 1000);
+    });
 }

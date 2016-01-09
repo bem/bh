@@ -67,6 +67,7 @@
                     }
                     timer = window.setTimeout(function(){
                         scope.data[vn] = cm.doc.getValue();
+                        scope.$apply();
                         var res = document.getElementById('result-html');
                         res.value = scope.compiledHtml();
                         res.onchange();
