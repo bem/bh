@@ -60,6 +60,18 @@ describe('ctx.tParam()', function() {
         bh.apply({ block: 'button', content: { elem: 'control' } });
     });
 
+    it('should not override later declarations in child nodes', function() {
+        bh.match('button', function(ctx) {
+            ctx.tParam('foo', 1);
+            console.log('button', ctx.tParam('foo'));
+        });
+        bh.match('button__control', function(ctx) {
+            ctx.tParam('foo', 2);
+            ctx.tParam('foo').should.equal(1);
+        });
+        bh.apply({ block: 'button', content: { elem: 'control' } });
+    });
+
     it('should override later declarations with force flag', function() {
         bh.match('button', function(ctx) {
             ctx.tParam('foo', 1, true);
