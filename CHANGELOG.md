@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.1.4
+- Fixed tParam reassignment of parent node value (#170).
+
 ## 4.1.3
 - Fixed bug with `ctx.js()` (#162).
 
