@@ -18,6 +18,11 @@ describe('options', function() {
         bh.apply({ tag: 'rect' }).should.equal('<rect/>');
     });
 
+    it('shoud not render trailing slash for short tags', function() {
+        bh.setOptions({ xhtml: false });
+        bh.apply({ tag: 'br' }).should.equal('<br>');
+    });
+
     describe('js related attrs and names', function() {
         it('should use onclick and js format as default', function() {
             bh.apply({ block: 'button', js: true }).should.equal(

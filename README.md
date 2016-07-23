@@ -271,6 +271,13 @@ bh.apply({ block: 'button', mods: { disabled: true } });
 bh.setOptions({ shortTags: ['rect'] });
 ```
 
+### xhtml
+`xhtml` defines wether or not trailing slash should be rendered for short tags. Default value is `true`.
+
+```javascript
+bh.setOptions({ xhtml: false });
+```
+
 ## Additional examples
 
 For example, if you want to set `state` modifier with `closed` value for all blocks, do the following:
