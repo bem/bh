@@ -269,6 +269,13 @@ bh.apply({ block: 'button', mods: { disabled: true } });
 bh.setOptions({ shortTags: ['rect'] });
 ```
 
+### xhtml
+`xhtml` определяет, нужно ли рендерить слеш для коротких тегов. По умолчанию `true`.
+
+```javascript
+bh.setOptions({ xhtml: false });
+```
+
 ## Дополнительные примеры
 
 Например, мы хотим установить модификатор `state` со значением `closed` для всех блоков `popup`:
