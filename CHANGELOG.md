@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.2.0
+- Added `xhtml` option (#174).
+
 ## 4.1.4
 - Fixed tParam reassignment of parent node value (#170).
 
