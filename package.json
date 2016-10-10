@@ -20,11 +20,11 @@
     }
   ],
   "devDependencies": {
-    "mocha": "2.2.x",
-    "chai": "2.x",
-    "istanbul": "0.3.x",
+    "mocha": "3.1.x",
+    "chai": "3.5.x",
+    "istanbul": "0.4.x",
     "jshint": "2.x",
-    "jscs": "1.11.x"
+    "jscs": "3.0.x"
   },
   "engines": {
     "node": ">= 0.10"

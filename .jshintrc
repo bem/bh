@@ -1,9 +1,17 @@
 {
+    "browser": true,
+    "jquery": true,
+    "node": true,
+    "mocha": true,
+
     "boss": true,
+    "debug": false,
+    "devel": false,
     "eqeqeq": true,
     "eqnull": true,
     "evil": true,
+    "lastsemic": true,
     "noempty": true,
-    "quotmark": "single",
+    "undef": true,
     "unused": true
 }
