@@ -54,7 +54,7 @@ describe('bh.processBemJson', function() {
             block: 'button',
             mods: { valid: true },
             elem: 'inner',
-            elemMods: { disabled: 'yes' },
+            elemMods: { disabled: 'yes' }
         }).should.deep.equal({
             block: 'button',
             mods: { valid: true },
