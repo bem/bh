@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.2.1
+- BH prototype points to BH (#176).
+
 ## 4.2.0
 - Added `xhtml` option (#174).
 
