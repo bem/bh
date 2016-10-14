@@ -156,4 +156,23 @@ describe('bh.match()', function() {
             '<div class="button"><div class="button__control"></div></div>'
         );
     });
+
+    it('should match on Number mod values', function() {
+        bh.match('title', function(ctx) {
+            ctx.tag('h1');
+        });
+
+        bh.match('title_level_2', function(ctx) {
+            ctx.tag('h2');
+        });
+
+        bh.apply({
+            block: 'title',
+            mods: {
+                level: 2
+            }
+        }).should.equal(
+            '<h2 class="title title_level_2"></h2>'
+        );
+    });
 });
