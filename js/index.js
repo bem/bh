@@ -1,7 +1,7 @@
 function BHController($scope, $location) {
 
     var defaultData = {
-        inputBemjson: '{ block: \'button\', content: \'Кнопка\' }',
+        inputBemjson: '{ block: \'button\', content: \'Button\' }',
         inputMatchers: 'bh.match(\'button\', function(ctx) {\n' +
             '    ctx.tag(\'button\');\n' +
             '    ctx.attr(\'role\', \'button\');\n' +

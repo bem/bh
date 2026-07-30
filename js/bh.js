@@ -3,55 +3,68 @@ var BH = (function() {
 var lastGenId = 0;
 
 /**
- * BH: BEMJSON -> HTML процессор.
+ * BH: BEMJSON to HTML processor.
  * @constructor
  */
 function BH() {
     /**
-     * Используется для идентификации шаблонов.
-     * Каждому шаблону дается уникальный id для того, чтобы избежать повторного применения
-     * шаблона к одному и тому же узлу BEMJSON-дерева.
+     * Identifies templates. Each template receives a unique ID to prevent it
+     * from being applied to the same BEMJSON node more than once.
      * @type {Number}
      * @private
      */
     this._lastMatchId = 0;
     /**
-     * Плоский массив для хранения матчеров.
-     * Каждый элемент — массив с двумя элементами: [{String} выражение, {Function} шаблон}]
+     * Flat matcher storage. Each item contains a selector expression and a
+     * template function: [{String} expression, {Function} template].
      * @type {Array}
      * @private
      */
     this._matchers = [];
     /**
-     * Флаг, включающий автоматическую систему поиска зацикливаний. Следует использовать в development-режиме,
-     * чтобы определять причины зацикливания.
+     * Enables automatic loop detection. Use it in development to identify the
+     * source of recursive processing.
      * @type {Boolean}
      * @private
      */
     this._infiniteLoopDetection = false;
 
     /**
-     * Неймспейс для библиотек. Сюда можно писать различный функционал для дальнейшего использования в шаблонах.
+     * Namespace for helpers that templates can reuse.
      * ```javascript
+     * bh.lib.i18n = BEM.I18N;
      * bh.lib.objects = bh.lib.objects || {};
      * bh.lib.objects.inverse = bh.lib.objects.inverse || function(obj) { ... };
      * ```
      * @type {Object}
      */
     this.lib = {};
-    this._inited = false;
     /**
-     * Опции BH. Задаются через setOptions.
+     * Lookup table for short tags. Extend it with setOptions({ shortTags: [...] }).
+     */
+    this._shortTags = {};
+    for (var i = 0; i < SHORT_TAGS.length; i++) {
+        this._shortTags[SHORT_TAGS[i]] = 1;
+    }
+    /**
+     * BH options configured through setOptions.
      * @type {Object}
      */
     this._options = {};
     this._optJsAttrName = 'onclick';
     this._optJsAttrIsJs = true;
+    this._optJsCls = 'i-bem';
+    this._optJsElem = true;
+    this._optEscapeContent = false;
+    this._optNobaseMods = false;
+    this._optDelimElem = '__';
+    this._optDelimMod = '_';
+    this._optShortTagCloser = '/>';
     this.utils = {
         _expandoId: new Date().getTime(),
         bh: this,
         /**
-         * Проверяет, что объект является примитивом.
+         * Checks whether a value is simple content rather than a BEMJSON node.
          * ```javascript
          * bh.match('link', function(ctx) {
          *     ctx.tag(ctx.isSimple(ctx.content()) ? 'span' : 'div');
@@ -66,8 +79,8 @@ function BH() {
             return t === 'string' || t === 'number';
         },
         /**
-         * Расширяет один объект свойствами другого (других).
-         * Аналог jQuery.extend.
+         * Extends an object with properties from one or more source objects.
+         * Similar to jQuery.extend.
          * ```javascript
          * obj = ctx.extend(obj, {a: 1});
          * ```
@@ -81,6 +94,7 @@ function BH() {
             for (var i = 1, len = arguments.length; i < len; i++) {
                 var obj = arguments[i],
                     key;
+                /* istanbul ignore else */
                 if (obj) {
                     for (key in obj) {
                         target[key] = obj[key];
@@ -90,8 +104,7 @@ function BH() {
             return target;
         },
         /**
-         * Возвращает позицию элемента в рамках родителя.
-         * Отсчет производится с 1 (единицы).
+         * Returns the one-based position of the current node within its parent.
          * ```javascript
          * bh.match('list__item', function(ctx) {
          *     ctx.mod('pos', ctx.position());
@@ -104,7 +117,7 @@ function BH() {
             return node.index === 'content' ? 1 : node.position;
         },
         /**
-         * Возвращает true, если текущий BEMJSON-элемент первый в рамках родительского BEMJSON-элемента.
+         * Returns true when the current BEMJSON node is the first child of its parent.
          * ```javascript
          * bh.match('list__item', function(ctx) {
          *     if (ctx.isFirst()) {
@@ -119,7 +132,7 @@ function BH() {
             return node.index === 'content' || node.position === 1;
         },
         /**
-         * Возвращает true, если текущий BEMJSON-элемент последний в рамках родительского BEMJSON-элемента.
+         * Returns true when the current BEMJSON node is the last child of its parent.
          * ```javascript
          * bh.match('list__item', function(ctx) {
          *     if (ctx.isLast()) {
@@ -134,8 +147,8 @@ function BH() {
             return node.index === 'content' || node.position === node.arr._listLength;
         },
         /**
-         * Передает параметр вглубь BEMJSON-дерева.
-         * **force** — задать значение параметра даже если оно было задано ранее.
+         * Passes a parameter down the BEMJSON tree.
+         * **force** replaces an existing value.
          * ```javascript
          * bh.match('input', function(ctx) {
          *     ctx.content({ elem: 'control' });
@@ -154,7 +167,7 @@ function BH() {
             var keyName = '__tp_' + key;
             var node = this.node;
             if (arguments.length > 1) {
-                if (force || !node.hasOwnProperty(keyName))
+                if (force || !this.tParam(key))
                     node[keyName] = value;
                 return this;
             } else {
@@ -168,12 +181,11 @@ function BH() {
             }
         },
         /**
-         * Применяет матчинг для переданного фрагмента BEMJSON.
-         * Возвращает результат преобразований.
-         * @param {Object|Array} bemJson
+         * Applies templates to a BEMJSON fragment in the current block context.
+         * @param {BemJson} bemJson
          * @returns {Object|Array}
          */
-        apply: function(bemJson) {
+        process: function(bemJson) {
             var prevCtx = this.ctx,
                 prevNode = this.node;
             var res = this.bh.processBemJson(bemJson, prevCtx.block);
@@ -182,9 +194,10 @@ function BH() {
             return res;
         },
         /**
-         * Выполняет преобразования данного BEMJSON-элемента остальными шаблонами.
-         * Может понадобиться, например, чтобы добавить элемент в самый конец содержимого, если в базовых шаблонах в конец содержимого добавляются другие элементы.
-         * Пример:
+         * Applies the remaining templates to the current BEMJSON node.
+         * This is useful when a derived template must operate on content after
+         * the base templates have modified it.
+         * Example:
          * ```javascript
          * bh.match('header', function(ctx) {
          *    ctx.content([
@@ -200,28 +213,25 @@ function BH() {
          *    ], true);
          * });
          * ```
-         * @param {Object} [changes]
          * @returns {Ctx}
          */
         applyBase: function() {
             var node = this.node;
             var json = node.json;
-
-            if (!json.elem && json.mods) json.blockMods = json.mods;
             var block = json.block;
-            var blockMods = json.blockMods;
+            var blockMods = json.mods;
 
             var subRes = this.bh._fastMatcher(this, json);
             if (subRes !== undefined) {
                 this.ctx = node.arr[node.index] = node.json = subRes;
-                node.blockName = block;
-                node.blockMods = blockMods;
+                node.block = block;
+                node.mods = blockMods;
             }
             return this;
         },
         /**
-         * Останавливает выполнение прочих шаблонов для данного BEMJSON-элемента.
-         * Пример:
+         * Stops any remaining templates for the current BEMJSON node.
+         * Example:
          * ```javascript
          * bh.match('button', function(ctx) {
          *     ctx.tag('button', true);
@@ -238,16 +248,16 @@ function BH() {
             return this;
         },
         /**
-         * Возвращает уникальный идентификатор. Может использоваться, например,
-         * чтобы задать соответствие между `label` и `input`.
+         * Returns a unique identifier, for example to associate a `label` with
+         * an `input`.
          * @returns {String}
          */
         generateId: function() {
             return 'uniq' + this._expandoId + (++lastGenId);
         },
         /**
-         * Возвращает/устанавливает модификатор в зависимости от аргументов.
-         * **force** — задать модификатор даже если он был задан ранее.
+         * Gets or sets a modifier depending on the arguments.
+         * **force** replaces an existing modifier.
          * ```javascript
          * bh.match('input', function(ctx) {
          *     ctx.mod('native', 'yes');
@@ -264,19 +274,18 @@ function BH() {
          * @returns {String|undefined|Ctx}
          */
         mod: function(key, value, force) {
-            var mods;
+            var field = this.ctx.elem ? 'elemMods' : 'mods';
             if (arguments.length > 1) {
-                mods = this.ctx.mods || (this.ctx.mods = {});
+                var mods = this.ctx[field];
                 mods[key] = !mods.hasOwnProperty(key) || force ? value : mods[key];
                 return this;
             } else {
-                mods = this.ctx.mods;
-                return mods ? mods[key] : undefined;
+                return this.ctx[field][key];
             }
         },
         /**
-         * Возвращает/устанавливает модификаторы в зависимости от аргументов.
-         * **force** — задать модификаторы даже если они были заданы ранее.
+         * Gets or sets modifiers depending on the arguments.
+         * **force** replaces existing modifiers.
          * ```javascript
          * bh.match('paranja', function(ctx) {
          *     ctx.mods({
@@ -290,38 +299,39 @@ function BH() {
          * @returns {Object|Ctx}
          */
         mods: function(values, force) {
-            var mods = this.ctx.mods || (this.ctx.mods = {});
+            var field = this.ctx.elem ? 'elemMods' : 'mods';
+            var mods = this.ctx[field];
             if (values !== undefined) {
-                this.ctx.mods = force ? this.extend(mods, values) : this.extend(values, mods);
+                this.ctx[field] = force ? this.extend(mods, values) : this.extend(values, mods);
                 return this;
             } else {
                 return mods;
             }
         },
         /**
-         * Возвращает/устанавливает тег в зависимости от аргументов.
-         * **force** — задать значение тега даже если оно было задано ранее.
+         * Gets or sets the tag depending on the arguments.
+         * **force** replaces an existing tag.
          * ```javascript
          * bh.match('input', function(ctx) {
          *     ctx.tag('input');
          * });
          * ```
-         * @param {String} [tagName]
+         * @param {String} [value]
          * @param {Boolean} [force]
          * @returns {String|undefined|Ctx}
          */
-        tag: function(tagName, force) {
-            if (tagName !== undefined) {
-                this.ctx.tag = this.ctx.tag === undefined || force ? tagName : this.ctx.tag;
-                return this;
-            } else {
+        tag: function(value, force) {
+            if (value === undefined) {
                 return this.ctx.tag;
             }
+            if (force || this.ctx.tag === undefined) {
+                this.ctx.tag = value;
+            }
+            return this;
         },
         /**
-         * Возвращает/устанавливает значение mix в зависимости от аргументов.
-         * При установке значения, если force равен true, то переданный микс заменяет прежнее значение,
-         * в противном случае миксы складываются.
+         * Gets or sets the mix depending on the arguments. When **force** is
+         * true, the new mix replaces the old value; otherwise mixes are merged.
          * ```javascript
          * bh.match('button_pseudo_yes', function(ctx) {
          *     ctx.mix({ block: 'link', mods: { pseudo: 'yes' } });
@@ -336,26 +346,18 @@ function BH() {
          * @returns {Array|undefined|Ctx}
          */
         mix: function(mix, force) {
-            if (mix !== undefined) {
-                if (force) {
-                    this.ctx.mix = mix;
-                } else {
-                    if (this.ctx.mix) {
-                        this.ctx.mix = Array.isArray(this.ctx.mix) ?
-                            this.ctx.mix.concat(mix) :
-                            [this.ctx.mix].concat(mix);
-                    } else {
-                        this.ctx.mix = mix;
-                    }
-                }
-                return this;
-            } else {
+            if (mix === undefined) {
                 return this.ctx.mix;
             }
+            this.ctx.mix = (force || !this.ctx.mix) ?
+                mix :
+                (Array.isArray(this.ctx.mix) ? this.ctx.mix : [this.ctx.mix])
+                    .concat(mix);
+            return this;
         },
         /**
-         * Возвращает/устанавливает значение атрибута в зависимости от аргументов.
-         * **force** — задать значение атрибута даже если оно было задано ранее.
+         * Gets or sets an attribute depending on the arguments.
+         * **force** replaces an existing attribute.
          * @param {String} key
          * @param {String} [value]
          * @param {Boolean} [force]
@@ -373,8 +375,8 @@ function BH() {
             }
         },
         /**
-         * Возвращает/устанавливает атрибуты в зависимости от аргументов.
-         * **force** — задать атрибуты даже если они были заданы ранее.
+         * Gets or sets attributes depending on the arguments.
+         * **force** replaces existing attributes.
          * ```javascript
          * bh.match('input', function(ctx) {
          *     ctx.attrs({
@@ -389,38 +391,38 @@ function BH() {
          */
         attrs: function(values, force) {
             var attrs = this.ctx.attrs || {};
-            if (values !== undefined) {
-                this.ctx.attrs = force ? this.extend(attrs, values) : this.extend(values, attrs);
-                return this;
-            } else {
+            if (values === undefined) {
                 return attrs;
             }
+            this.ctx.attrs = force ? this.extend(attrs, values) : this.extend(values, attrs);
+            return this;
         },
         /**
-         * Возвращает/устанавливает значение bem в зависимости от аргументов.
-         * **force** — задать значение bem даже если оно было задано ранее.
-         * Если `bem` имеет значение `false`, то для элемента не будут генерироваться BEM-классы.
+         * Gets or sets the `bem` flag depending on the arguments.
+         * **force** replaces an existing value. When `bem` is `false`, the node
+         * does not receive BEM classes.
          * ```javascript
          * bh.match('meta', function(ctx) {
          *     ctx.bem(false);
          * });
          * ```
-         * @param {Boolean} [bem]
+         * @param {Boolean} [value]
          * @param {Boolean} [force]
          * @returns {Boolean|undefined|Ctx}
          */
-        bem: function(bem, force) {
-            if (bem !== undefined) {
-                this.ctx.bem = this.ctx.bem === undefined || force ? bem : this.ctx.bem;
-                return this;
-            } else {
+        bem: function(value, force) {
+            if (value === undefined) {
                 return this.ctx.bem;
             }
+            if (force || this.ctx.bem === undefined) {
+                this.ctx.bem = value;
+            }
+            return this;
         },
         /**
-         * Возвращает/устанавливает значение `js` в зависимости от аргументов.
-         * **force** — задать значение `js` даже если оно было задано ранее.
-         * Значение `js` используется для инициализации блоков в браузере через `BEM.DOM.init()`.
+         * Gets or sets the `js` value depending on the arguments.
+         * **force** replaces an existing value. The browser uses `js` data to
+         * initialize blocks through `BEM.DOM.init()`.
          * ```javascript
          * bh.match('input', function(ctx) {
          *     ctx.js(true);
@@ -431,41 +433,38 @@ function BH() {
          * @returns {Boolean|Object|Ctx}
          */
         js: function(js, force) {
-            if (js !== undefined) {
-                this.ctx.js = force ?
-                    (js === true ? {} : js) :
-                    js ? this.extend(this.ctx.js, js) : this.ctx.js;
-                return this;
-            } else {
-                return this.ctx.js;
-            }
+            var ctx = this.ctx;
+            if (js === undefined) return ctx.js;
+            if (force || ctx.js === undefined) ctx.js = js;
+            else if (ctx.js !== false) ctx.js = this.extend(ctx.js, js);
+            return this;
         },
         /**
-         * Возвращает/устанавливает значение CSS-класса в зависимости от аргументов.
-         * **force** — задать значение CSS-класса даже если оно было задано ранее.
+         * Gets or sets additional CSS classes depending on the arguments.
+         * **force** replaces an existing value.
          * ```javascript
          * bh.match('page', function(ctx) {
          *     ctx.cls('ua_js_no ua_css_standard');
          * });
          * ```
-         * @param {String} [cls]
+         * @param {String} [value]
          * @param {Boolean} [force]
          * @returns {String|Ctx}
          */
-        cls: function(cls, force) {
-            if (cls !== undefined) {
-                this.ctx.cls = this.ctx.cls === undefined || force ? cls : this.ctx.cls;
-                return this;
-            } else {
+        cls: function(value, force) {
+            if (value === undefined) {
                 return this.ctx.cls;
             }
+            if (force || this.ctx.cls === undefined) {
+                this.ctx.cls = value;
+            }
+            return this;
         },
         /**
-         * Возвращает/устанавливает параметр текущего BEMJSON-элемента.
-         * **force** — задать значение параметра, даже если оно было задано ранее.
-         * Например:
+         * Gets or sets a property of the current BEMJSON node.
+         * **force** replaces an existing value. Example:
          * ```javascript
-         * // Пример входного BEMJSON: { block: 'search', action: '/act' }
+         * // Example input: { block: 'search', action: '/act' }
          * bh.match('search', function(ctx) {
          *     ctx.attr('action', ctx.param('action') || '/');
          * });
@@ -476,36 +475,59 @@ function BH() {
          * @returns {*|Ctx}
          */
         param: function(key, value, force) {
-            if (value !== undefined) {
-                this.ctx[key] = this.ctx[key] === undefined || force ? value : this.ctx[key];
-                return this;
-            } else {
+            if (value === undefined) {
                 return this.ctx[key];
             }
+            if (force || this.ctx[key] === undefined) {
+                this.ctx[key] = value;
+            }
+            return this;
         },
         /**
-         * Возвращает/устанавливает содержимое в зависимости от аргументов.
-         * **force** — задать содержимое даже если оно было задано ранее.
+         * Gets or sets escaped content depending on the arguments.
+         * **force** replaces existing content.
          * ```javascript
          * bh.match('input', function(ctx) {
          *     ctx.content({ elem: 'control' });
          * });
          * ```
-         * @param {String} [value]
+         * @param {BemJson} [value]
          * @param {Boolean} [force]
-         * @returns {*|Ctx}
+         * @returns {BemJson|Ctx}
          */
         content: function(value, force) {
-            if (arguments.length > 0) {
-                this.ctx.content = this.ctx.content === undefined || force ? value : this.ctx.content;
-                return this;
-            } else {
+            if (value === undefined) {
                 return this.ctx.content;
             }
+            if (force || this.ctx.content === undefined) {
+                this.ctx.content = value;
+            }
+            return this;
         },
         /**
-         * Возвращает текущий фрагмент BEMJSON-дерева.
-         * Может использоваться в связке с `return` для враппинга и подобных целей.
+         * Gets or sets raw HTML content depending on the arguments.
+         * **force** replaces existing content.
+         * ```javascript
+         * bh.match('input', function(ctx) {
+         *     ctx.html({ elem: 'control' });
+         * });
+         * ```
+         * @param {String} [value]
+         * @param {Boolean} [force]
+         * @returns {String|Ctx}
+         */
+        html: function(value, force) {
+            if (value === undefined) {
+                return this.ctx.html;
+            }
+            if (force || this.ctx.html === undefined) {
+                this.ctx.html = value;
+            }
+            return this;
+        },
+        /**
+         * Returns the current BEMJSON fragment. It can be returned from a
+         * template when wrapping the current node.
          * ```javascript
          * bh.match('input', function(ctx) {
          *     return {
@@ -517,22 +539,308 @@ function BH() {
          * @returns {Object|Array}
          */
         json: function() {
-            return this.newCtx || this.ctx;
+            return this.ctx;
         }
     };
 }
 
+/**
+ * Enqueues child BEMJSON nodes and assigns positions only to non-empty objects.
+ * @param {Array} nodes
+ * @param {Array} json
+ * @param {String} block
+ * @param {Object} blockMods
+ * @param {Object} parentNode
+ * @returns {undefined}
+ */
+function enqueueArrayNodes(nodes, json, block, blockMods, parentNode) {
+    var child, i, j, l;
+    for (i = 0, j = 0, l = json.length; i < l; i++) {
+        child = json[i];
+        if (child !== false && child != null && typeof child === 'object') {
+            nodes.push({
+                json: child,
+                arr: json,
+                index: i,
+                position: ++j,
+                block: block,
+                mods: blockMods,
+                parentNode: parentNode
+            });
+        }
+    }
+    json._listLength = j;
+}
+
+/**
+ * Flattens a content array of arbitrary depth.
+ * @param {Array} content
+ * @returns {Array}
+ */
+function flattenContent(content) {
+    var flatten, i, l;
+    do {
+        flatten = false;
+        for (i = 0, l = content.length; i < l; i++) {
+            if (Array.isArray(content[i])) {
+                flatten = true;
+                break;
+            }
+        }
+        if (flatten) {
+            content = content.concat.apply([], content);
+        }
+    } while (flatten);
+    return content;
+}
+
+/**
+ * Applies inherited block names and modifiers to the current BEMJSON node.
+ * @param {Object} json
+ * @param {Object} node
+ * @returns {undefined}
+ */
+function inheritBemContext(json, node) {
+    if (json.elem) {
+        node.block = json.block = json.block || node.block;
+        if (!json.elemMods) {
+            json.elemMods = json.mods || {};
+            json.mods = null;
+        }
+        node.mods = json.mods = json.mods || node.mods;
+    } else if (json.block) {
+        node.block = json.block;
+        node.mods = json.mods = json.mods || {};
+    }
+}
+
+/**
+ * Checks the processing counters for a node and the compiled matcher.
+ * @param {BH} bh
+ * @param {Object} json
+ * @param {Function} compiledMatcher
+ * @returns {undefined}
+ */
+function detectInfiniteLoop(bh, json, compiledMatcher) {
+    json.__processCounter = (json.__processCounter || 0) + 1;
+    compiledMatcher.__processCounter = (compiledMatcher.__processCounter || 0) + 1;
+    if (json.__processCounter > 100) {
+        throw new Error('Infinite json loop detected at "' + json.block +
+            (json.elem ? bh._optDelimElem + json.elem : '') + '".');
+    }
+    if (compiledMatcher.__processCounter > 1000) {
+        throw new Error('Infinite matcher loop detected at "' + json.block +
+            (json.elem ? bh._optDelimElem + json.elem : '') + '".');
+    }
+}
+
+/**
+ * Groups matcher declarations by the given field.
+ * @param {Array} data
+ * @param {String} key
+ * @returns {Object}
+ */
+function groupMatcherDeclarations(data, key) {
+    var res = {};
+    for (var i = 0, l = data.length; i < l; i++) {
+        var item = data[i];
+        var value = item[key] || '__no_value__';
+        (res[value] || (res[value] = [])).push(item);
+    }
+    return res;
+}
+
+/**
+ * Parses a matcher expression into block, element, and modifier declarations.
+ * @param {BH} bh
+ * @param {Array} matcherInfo
+ * @param {Number} index
+ * @returns {Object}
+ */
+function createMatcherDeclaration(bh, matcherInfo, index) {
+    var expr = matcherInfo[0];
+    var exprBits, blockExprBits;
+    var decl = { fn: matcherInfo[1], index: index };
+    if (~expr.indexOf(bh._optDelimElem)) {
+        exprBits = expr.split(bh._optDelimElem);
+        blockExprBits = exprBits[0].split(bh._optDelimMod);
+        decl.block = blockExprBits[0];
+        if (blockExprBits.length > 1) {
+            decl.blockMod = blockExprBits[1];
+            decl.blockModVal = blockExprBits[2] || true;
+        }
+        exprBits = exprBits[1].split(bh._optDelimMod);
+        decl.elem = exprBits[0];
+        if (exprBits.length > 1) {
+            decl.elemMod = exprBits[1];
+            decl.elemModVal = exprBits[2] || true;
+        }
+    } else {
+        exprBits = expr.split(bh._optDelimMod);
+        decl.block = exprBits[0];
+        if (exprBits.length > 1) {
+            decl.blockMod = exprBits[1];
+            decl.blockModVal = exprBits[2] || true;
+        }
+    }
+    return decl;
+}
+
+/**
+ * Appends one matcher call to the generated source.
+ * @param {Array} res
+ * @param {String} fnId
+ * @param {Number} index
+ * @returns {undefined}
+ */
+function appendMatcherCall(res, fnId, index) {
+    res.push(
+        'json.' + fnId + ' = true;',
+        'subRes = _m' + index + '(ctx, json);',
+        'if (subRes !== undefined) return (subRes || "");',
+        'if (json._stop) return;');
+}
+
+/**
+ * Appends a selector condition and matcher call to the generated source.
+ * @param {Array} res
+ * @param {Object} decl
+ * @returns {undefined}
+ */
+function appendMatcherDeclaration(res, decl) {
+    var fn = decl.fn;
+    var conds = ['!json.' + fn.__id];
+    if (decl.elemMod) {
+        conds.push(
+            'json.elemMods && json.elemMods["' + decl.elemMod + '"] === ' +
+                (decl.elemModVal === true || '"' + decl.elemModVal + '"'));
+    }
+    if (decl.blockMod) {
+        conds.push(
+            'json.mods && json.mods["' + decl.blockMod + '"] === ' +
+                (decl.blockModVal === true || '"' + decl.blockModVal + '"'));
+    }
+    res.push('if (' + conds.join(' && ') + ') {');
+    appendMatcherCall(res, fn.__id, decl.index);
+    res.push('}');
+}
+
+/**
+ * Appends sequential calls to global matchers.
+ * @param {Array} res
+ * @param {Array} declarations
+ * @returns {undefined}
+ */
+function appendGlobalMatchers(res, declarations) {
+    for (var i = 0, l = declarations.length; i < l; i++) {
+        var decl = declarations[i];
+        appendMatcherCall(res, decl.fn.__id, decl.index);
+    }
+}
+
+/**
+ * Creates an optimized matcher dispatcher once and caches it in `_fastMatcher`,
+ * avoiding repeated selector parsing for every BEMJSON node. `buildMatcher()`
+ * produces the body of a factory that accepts only the registered matcher
+ * functions and returns `applyMatchers(ctx, json)`. Matcher bodies and BEMJSON
+ * data are never interpolated into the source. Selector fragments come from
+ * trusted application configuration passed to `match()` during registration,
+ * not from the user-supplied BEMJSON being processed.
+ *
+ * The dispatcher preserves declaration order, marks matchers already applied to
+ * a node, and returns either a replacement node or `undefined` after in-place
+ * mutation. `processBemJson` requeues replacement nodes. Global `beforeEach` and
+ * `afterEach` handlers surround selector matchers. `test.match.js`,
+ * `test.matchGlobal.js`, `test.processBemJson.js`, `test.applyBase.js`, and
+ * `test.loop.js` protect these invariants through public BH behavior.
+ * @param {BH} bh
+ * @returns {Function}
+ */
+function compileMatcher(bh) {
+    return Function('ms', bh.buildMatcher())(bh._matchers);
+}
+
+/**
+ * Enqueues the content of a BEMJSON node for processing.
+ * @param {Array} nodes
+ * @param {Object} node
+ * @param {Object} json
+ * @returns {undefined}
+ */
+function enqueueContent(nodes, node, json) {
+    var content = json.content;
+    if (Array.isArray(content)) {
+        json.content = content = flattenContent(content);
+        enqueueArrayNodes(nodes, content, node.block, node.mods, node);
+    } else {
+        nodes.push({
+            json: content,
+            arr: json,
+            index: 'content',
+            block: node.block,
+            mods: node.mods,
+            parentNode: node
+        });
+    }
+}
+
+/**
+ * Serializes user-provided HTML attributes from a BEMJSON node.
+ * @param {Object} json
+ * @returns {String}
+ */
+function buildHtmlAttrs(json) {
+    var attrs = '';
+    var jattr, jval, i;
+    if (jattr = json.attrs) {
+        for (i in jattr) {
+            jval = jattr[i];
+            if (jval === true) {
+                attrs += ' ' + i;
+            } else if (jval !== false && jval !== null && jval !== undefined) {
+                attrs += ' ' + i + '="' + attrEscape(jval) + '"';
+            }
+        }
+    }
+    return attrs;
+}
+
+/**
+ * Appends an opening tag, content, and closing tag to the HTML buffer.
+ * @param {BH} bh
+ * @param {Object} json
+ * @param {String} cls
+ * @param {String} attrs
+ * @returns {undefined}
+ */
+function appendHtmlTag(bh, json, cls, attrs) {
+    var tag = json.tag || 'div';
+    bh._buf += '<' + tag + (cls ? ' class="' + cls + '"' : '') + (attrs ? attrs : '');
+
+    if (bh._shortTags[tag]) {
+        bh._buf += bh._optShortTagCloser;
+    } else {
+        bh._buf += '>';
+        if (json.html) {
+            bh._buf += json.html;
+        } else {
+            bh._html(json.content);
+        }
+        bh._buf += '</' + tag + '>';
+    }
+}
+
 BH.prototype = {
+    constructor: BH,
 
     /**
-     * Задает опции шаблонизации.
+     * Configures rendering options.
      *
      * @param {Object} options
-     *        {String} options[jsAttrName] Атрибут, в который записывается значение поля `js`. По умолчанию, `onclick`.
-     *        {String} options[jsAttrScheme] Схема данных для `js`-значения.
-     *                 Форматы:
-     *                     `js` — значение по умолчанию. Получаем `return { ... }`.
-     *                     `json` — JSON-формат. Получаем `{ ... }`.
+     *        {String} options[jsAttrName] Attribute used for the `js` value. Defaults to `onclick`.
+     *        {String} options[jsAttrScheme] Serialization scheme for the `js` value:
+     *                     `js` produces `return { ... }` and is the default;
+     *                     `json` produces `{ ... }`.
      * @returns {BH}
      */
     setOptions: function(options) {
@@ -546,11 +854,38 @@ BH.prototype = {
         if (options.jsAttrScheme) {
             this._optJsAttrIsJs = options.jsAttrScheme === 'js';
         }
+        if (options.jsCls !== undefined) {
+            this._optJsCls = options.jsCls;
+        }
+        if (options.hasOwnProperty('jsElem')) {
+            this._optJsElem = options.jsElem;
+        }
+        if (options.clsNobaseMods) {
+            this._optNobaseMods = true;
+        }
+        if (options.escapeContent) {
+            this._optEscapeContent = options.escapeContent;
+        }
+        if (options.delimElem) {
+            this._optDelimElem = options.delimElem;
+        }
+        if (options.delimMod) {
+            this._optDelimMod = options.delimMod;
+        }
+        if (options.xhtml === false) {
+            this._optShortTagCloser = '>';
+        }
+        if (options.shortTags) {
+            for (var j = 0; j < options.shortTags.length; j++) {
+                this._shortTags[options.shortTags[j]] = 1;
+            }
+        }
+
         return this;
     },
 
     /**
-     * Возвращает опции шаблонизации.
+     * Returns the current rendering options.
      *
      * @returns {Object}
      */
@@ -559,7 +894,7 @@ BH.prototype = {
     },
 
     /**
-     * Включает/выключает механизм определения зацикливаний.
+     * Enables or disables loop detection.
      *
      * @param {Boolean} enable
      * @returns {BH}
@@ -570,8 +905,8 @@ BH.prototype = {
     },
 
     /**
-     * Преобразует BEMJSON в HTML-код.
-     * @param {Object|Array|String} bemJson
+     * Converts BEMJSON into HTML.
+     * @param {BemJson} bemJson
      * @returns {String}
      */
     apply: function(bemJson) {
@@ -579,7 +914,7 @@ BH.prototype = {
     },
 
     /**
-     * Объявляет шаблон.
+     * Registers a template.
      * ```javascript
      * bh.match('page', function(ctx) {
      *     ctx.mix([{ block: 'ua' }]);
@@ -635,184 +970,146 @@ BH.prototype = {
     },
 
     /**
-     * Вспомогательный метод для компиляции шаблонов с целью их быстрого дальнейшего исполнения.
+     * Registers a global template that runs before selector templates.
+     * ```javascript
+     * bh.beforeEach(function(ctx, json) {
+     *     ctx.attr('onclick', json.counter);
+     * });
+     * ```
+     * @param {Function} matcher
+     * @returns {BH}
+     */
+    beforeEach: function(matcher) {
+        return this.match('$before', matcher);
+    },
+
+    /**
+     * Registers a global template that runs after selector templates.
+     * ```javascript
+     * bh.afterEach(function(ctx) {
+     *     ctx.tag('xdiv');
+     * });
+     * ```
+     * @param {Function} matcher
+     * @returns {BH}
+     */
+    afterEach: function(matcher) {
+        return this.match('$after', matcher);
+    },
+
+    /**
+     * Builds the source for a fast matcher dispatcher.
      * @returns {String}
      */
     buildMatcher: function() {
-
-        /**
-         * Группирует селекторы матчеров по указанному ключу.
-         * @param {Array} data
-         * @param {String} key
-         * @returns {Object}
-         */
-        function groupBy(data, key) {
-            var res = {};
-            for (var i = 0, l = data.length; i < l; i++) {
-                var item = data[i];
-                var value = item[key] || '__no_value__';
-                (res[value] || (res[value] = [])).push(item);
-            }
-            return res;
-        }
-
         var i, j, l;
         var res = [];
         var vars = ['bh = this'];
         var allMatchers = this._matchers;
-        var decl, expr, matcherInfo;
-        var declarations = [], exprBits, blockExprBits;
+        var matcherInfo;
+        var declarations = [];
         for (i = allMatchers.length - 1; i >= 0; i--) {
             matcherInfo = allMatchers[i];
-            expr = matcherInfo[0];
             vars.push('_m' + i + ' = ms[' + i + '][1]');
-            decl = { fn: matcherInfo[1], index: i };
-            if (~expr.indexOf('__')) {
-                exprBits = expr.split('__');
-                blockExprBits = exprBits[0].split('_');
-                decl.block = blockExprBits[0];
-                if (blockExprBits.length > 1) {
-                    decl.blockMod = blockExprBits[1];
-                    decl.blockModVal = blockExprBits[2] || true;
-                }
-                exprBits = exprBits[1].split('_');
-                decl.elem = exprBits[0];
-                if (exprBits.length > 1) {
-                    decl.elemMod = exprBits[1];
-                    decl.elemModVal = exprBits[2] || true;
-                }
-            } else {
-                exprBits = expr.split('_');
-                decl.block = exprBits[0];
-                if (exprBits.length > 1) {
-                    decl.blockMod = exprBits[1];
-                    decl.blockModVal = exprBits[2] || true;
-                }
-            }
-            declarations.push(decl);
+            declarations.push(createMatcherDeclaration(this, matcherInfo, i));
         }
-        var declByBlock = groupBy(declarations, 'block');
-        res.push('var ' + vars.join(', ') + ';');
-        res.push('function applyMatchers(ctx, json) {');
-        res.push('var subRes, newCtx;');
+        var declByBlock = groupMatcherDeclarations(declarations, 'block');
+
+        var beforeEach = declByBlock.$before;
+        var afterEach = declByBlock.$after;
+        if (afterEach) delete declByBlock.$after;
+
+        res.push(
+            'var ' + vars.join(', ') + ';',
+            'function applyMatchers(ctx, json) {',
+            'var subRes;');
+
+        if (beforeEach) {
+            delete declByBlock.$before;
+            appendGlobalMatchers(res, beforeEach);
+        }
 
         res.push('switch (json.block) {');
         for (var blockName in declByBlock) {
-            res.push('case "' + strEscape(blockName) + '":');
-            var declsByElem = groupBy(declByBlock[blockName], 'elem');
+            res.push('case "' + blockName + '":');
+            var declsByElem = groupMatcherDeclarations(declByBlock[blockName], 'elem');
 
             res.push('switch (json.elem) {');
             for (var elemName in declsByElem) {
                 if (elemName === '__no_value__') {
                     res.push('case undefined:');
                 } else {
-                    res.push('case "' + strEscape(elemName) + '":');
+                    res.push('case "' + elemName + '":');
                 }
                 var decls = declsByElem[elemName];
                 for (j = 0, l = decls.length; j < l; j++) {
-                    decl = decls[j];
-                    var fn = decl.fn;
-                    var conds = [];
-                    conds.push('!json.' + fn.__id);
-                    if (decl.elemMod) {
-                        conds.push(
-                            'json.mods && json.mods["' + strEscape(decl.elemMod) + '"] === ' +
-                                (decl.elemModVal === true || '"' + strEscape(decl.elemModVal) + '"'));
-                    }
-                    if (decl.blockMod) {
-                        conds.push(
-                            'json.blockMods["' + strEscape(decl.blockMod) + '"] === ' +
-                                (decl.blockModVal === true || '"' + strEscape(decl.blockModVal) + '"'));
-                    }
-                    res.push('if (' + conds.join(' && ') + ') {');
-                    res.push('json.' + fn.__id + ' = true;');
-                    res.push('subRes = _m' + decl.index + '(ctx, json);');
-                    res.push('if (subRes !== undefined) { return (subRes || "") }');
-                    res.push('if (newCtx = ctx.newCtx) { ctx.newCtx = null; return newCtx; }');
-                    res.push('if (json._stop) return;');
-                    res.push('}');
+                    appendMatcherDeclaration(res, decls[j]);
                 }
-                res.push('return;');
+                res.push('break;');
             }
-            res.push('}');
-
-            res.push('return;');
+            res.push(
+                '}',
+                'break;');
         }
         res.push('}');
-        res.push('};');
-        res.push('return applyMatchers;');
+
+        if (afterEach) {
+            appendGlobalMatchers(res, afterEach);
+        }
+
+        res.push(
+            '};',
+            'return applyMatchers;');
         return res.join('\n');
     },
 
     /**
-     * Раскрывает BEMJSON, превращая его из краткого в полный.
-     * @param {Object|Array} bemJson
+     * Expands shorthand BEMJSON into its fully processed representation.
+     * @param {BemJson} bemJson
      * @param {String} [blockName]
      * @param {Boolean} [ignoreContent]
      * @returns {Object|Array}
      */
     processBemJson: function(bemJson, blockName, ignoreContent) {
         if (bemJson == null) return;
-        if (!this._inited) {
-            this._init();
-        }
         var resultArr = [bemJson];
-        var nodes = [{ json: bemJson, arr: resultArr, index: 0, blockName: blockName, blockMods: !bemJson.elem && bemJson.mods || {} }];
-        var node, json, block, blockMods, i, j, l, p, child, subRes;
-        var compiledMatcher = (this._fastMatcher || (this._fastMatcher = Function('ms', this.buildMatcher())(this._matchers)));
+        var nodes = [{
+                json: bemJson,
+                arr: resultArr,
+                index: 0,
+                block: blockName,
+                mods: null
+            }];
+        var node, json, subRes;
+        var compiledMatcher = this._fastMatcher || (this._fastMatcher = compileMatcher(this));
         var processContent = !ignoreContent;
         var infiniteLoopDetection = this._infiniteLoopDetection;
 
         /**
-         * Враппер для json-узла.
+         * Context wrapper for a BEMJSON node.
          * @constructor
          */
         function Ctx() {
             this.ctx = null;
-            this.newCtx = null;
         }
         Ctx.prototype = this.utils;
         var ctx = new Ctx();
         while (node = nodes.shift()) {
             json = node.json;
-            block = node.blockName;
-            blockMods = node.blockMods;
             if (Array.isArray(json)) {
-                for (i = 0, j = 0, l = json.length; i < l; i++) {
-                    child = json[i];
-                    if (child !== false && child != null && typeof child === 'object') {
-                        nodes.push({ json: child, arr: json, index: i, position: ++j, blockName: block, blockMods: blockMods, parentNode: node });
-                    }
-                }
-                json._listLength = j;
+                enqueueArrayNodes(nodes, json, node.block, node.mods, node);
             } else {
-                var content, stopProcess = false;
-                if (json.elem) {
-                    block = json.block = json.block || block;
-                    blockMods = json.blockMods = json.blockMods || blockMods;
-                    if (json.elemMods) {
-                        json.mods = json.elemMods;
-                    }
-                } else if (json.block) {
-                    block = json.block;
-                    blockMods = json.blockMods = json.mods || {};
-                }
+                var stopProcess = false;
+                inheritBemContext(json, node);
 
-                if (json.block) {
-
+                if (typeof json === 'object') {
                     if (infiniteLoopDetection) {
-                        json.__processCounter = (json.__processCounter || 0) + 1;
-                        compiledMatcher.__processCounter = (compiledMatcher.__processCounter || 0) + 1;
-                        if (json.__processCounter > 100) {
-                            throw new Error('Infinite json loop detected at "' + json.block + (json.elem ? '__' + json.elem : '') + '".');
-                        }
-                        if (compiledMatcher.__processCounter > 1000) {
-                            throw new Error('Infinite matcher loop detected at "' + json.block + (json.elem ? '__' + json.elem : '') + '".');
-                        }
+                        detectInfiniteLoop(this, json, compiledMatcher);
                     }
 
                     subRes = undefined;
 
+                    /* istanbul ignore else */
                     if (!json._stop) {
                         ctx.node = node;
                         ctx.ctx = json;
@@ -820,47 +1117,15 @@ BH.prototype = {
                         if (subRes !== undefined) {
                             json = subRes;
                             node.json = json;
-                            node.blockName = block;
-                            node.blockMods = blockMods;
                             nodes.push(node);
                             stopProcess = true;
                         }
                     }
-
                 }
+
                 if (!stopProcess) {
-                    if (Array.isArray(json)) {
-                        node.json = json;
-                        node.blockName = block;
-                        node.blockMods = blockMods;
-                        nodes.push(node);
-                    } else {
-                        if (processContent && (content = json.content)) {
-                            if (Array.isArray(content)) {
-                                var flatten;
-                                do {
-                                    flatten = false;
-                                    for (i = 0, l = content.length; i < l; i++) {
-                                        if (Array.isArray(content[i])) {
-                                            flatten = true;
-                                            break;
-                                        }
-                                    }
-                                    if (flatten) {
-                                        json.content = content = content.concat.apply([], content);
-                                    }
-                                } while (flatten);
-                                for (i = 0, j = 0, l = content.length, p = l - 1; i < l; i++) {
-                                    child = content[i];
-                                    if (child !== false && child != null && typeof child === 'object') {
-                                        nodes.push({ json: child, arr: content, index: i, position: ++j, blockName: block, blockMods: blockMods, parentNode: node });
-                                    }
-                                }
-                                content._listLength = j;
-                            } else {
-                                nodes.push({ json: content, arr: json, index: 'content', blockName: block, blockMods: blockMods, parentNode: node });
-                            }
-                        }
+                    if (processContent && json.content) {
+                        enqueueContent(nodes, node, json);
                     }
                 }
             }
@@ -870,180 +1135,167 @@ BH.prototype = {
     },
 
     /**
-     * Превращает раскрытый BEMJSON в HTML.
-     * @param {Object|Array|String} json
+     * Converts processed BEMJSON into HTML.
+     * @param {BemJson} json
      * @returns {String}
      */
     toHtml: function(json) {
-        var res, i, l, item;
-        if (json === false || json == null) return '';
+        this._buf = '';
+        this._html(json);
+        var buf = this._buf;
+        delete this._buf;
+        return buf;
+    },
+
+    /**
+     * Appends a BEMJSON value to the current HTML buffer.
+     * @param {BemJson} json
+     * @returns {undefined}
+     */
+    _html: function(json) {
+        var i, l, item;
+        if (json === false || json == null) return;
         if (typeof json !== 'object') {
-            return json;
+            this._buf += this._optEscapeContent ? xmlEscape(json) : json;
         } else if (Array.isArray(json)) {
-            res = '';
             for (i = 0, l = json.length; i < l; i++) {
                 item = json[i];
                 if (item !== false && item != null) {
-                    res += this.toHtml(item);
+                    this._html(item);
                 }
             }
-            return res;
         } else {
+            if (json.toHtml) {
+                var html = json.toHtml.call(this, json) || '';
+                this._buf += html;
+                return;
+            }
+            var isBEM = json.bem !== false;
             if (typeof json.tag !== 'undefined' && !json.tag) {
-                return json.content ? this.toHtml(json.content) : '';
+                if (json.html) {
+                    this._buf += json.html;
+                } else {
+                    this._html(json.content);
+                }
+                return;
             }
             if (json.mix && !Array.isArray(json.mix)) {
                 json.mix = [json.mix];
             }
-            var cls = json.bem !== false && json.block ? toBemCssClasses(json) : '',
-                jattr, jval, attrs = '', jsParams, hasMixJsParams = false;
+            var cls = '',
+                attrs = buildHtmlAttrs(json), jsParams, hasMixJsParams = false;
 
-            if (jattr = json.attrs) {
-                for (i in jattr) {
-                    jval = jattr[i];
-                    if (jval !== null && jval !== undefined) {
-                        attrs += ' ' + i + '="' + attrEscape(jval) + '"';
+            if (isBEM) {
+                var base = json.block + (json.elem ? this._optDelimElem + json.elem : '');
+
+                if (json.block) {
+                    cls = toBemCssClasses(json, base, null, this._optNobaseMods, this._optDelimMod);
+                    if (json.js) {
+                        (jsParams = {})[base] = json.js === true ? {} : json.js;
                     }
                 }
-            }
 
-            if (json.js) {
-                (jsParams = {})[json.block + (json.elem ? '__' + json.elem : '')] = json.js === true ? {} : json.js;
-            }
+                var addJSInitClass = this._optJsCls && (this._optJsElem || !json.elem);
 
-            var mixes = json.mix;
-            if (mixes && mixes.length) {
-                for (i = 0, l = mixes.length; i < l; i++) {
-                    var mix = mixes[i];
-                    if (mix && mix.js) {
-                        (jsParams = jsParams || {})[(mix.block || json.block) + (mix.elem ? '__' + mix.elem : '')] = mix.js === true ? {} : mix.js;
-                        hasMixJsParams = true;
+                var mixes = json.mix;
+                if (mixes && mixes.length) {
+                    for (i = 0, l = mixes.length; i < l; i++) {
+                        var mix = mixes[i];
+                        if (mix && mix.bem !== false) {
+                            var mixBlock = mix.block || json.block || '',
+                                mixElem = mix.elem || (mix.block ? null : json.block && json.elem),
+                                mixBase = mixBlock + (mixElem ? this._optDelimElem + mixElem : '');
+
+                            if (mixBlock) {
+                                cls += toBemCssClasses(mix, mixBase, base, this._optNobaseMods, this._optDelimMod);
+                                if (mix.js) {
+                                    (jsParams = jsParams || {})[mixBase] = mix.js === true ? {} : mix.js;
+                                    hasMixJsParams = true;
+                                    if (!addJSInitClass) {
+                                        addJSInitClass = mixBlock && (this._optJsCls && (this._optJsElem || !mixElem));
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-            }
 
-            if (jsParams) {
-                if (json.bem !== false) {
-                    cls = cls + ' i-bem';
+                if (jsParams) {
+                    if (addJSInitClass) cls += ' ' + this._optJsCls;
+                    var jsData = (!hasMixJsParams && json.js === true ?
+                        '{"' + base + '":{}}' :
+                        jsAttrEscape(JSON.stringify(jsParams)));
+                    attrs += ' ' + (json.jsAttr || this._optJsAttrName) + '=\'' +
+                        (this._optJsAttrIsJs ? 'return ' + jsData : jsData) + '\'';
                 }
-                var jsData = (!hasMixJsParams && json.js === true ?
-                    '{&quot;' + json.block + (json.elem ? '__' + json.elem : '') + '&quot;:{}}' :
-                    attrEscape(JSON.stringify(jsParams)));
-                attrs += ' ' + (json.jsAttr || this._optJsAttrName) + '="' +
-                    (this._optJsAttrIsJs ? 'return ' + jsData : jsData) + '"';
             }
 
             if (json.cls) {
-                cls = cls ? cls + ' ' + json.cls : json.cls;
+                cls = (cls ? cls + ' ' : '') + attrEscape(json.cls).trim();
             }
-
-            var content, tag = (json.tag || 'div');
-            res = '<' + tag + (cls ? ' class="' + attrEscape(cls) + '"' : '') + (attrs ? attrs : '');
-
-            if (selfCloseHtmlTags[tag]) {
-                res += '/>';
-            } else {
-                res += '>';
-                if ((content = json.content) != null) {
-                    if (Array.isArray(content)) {
-                        for (i = 0, l = content.length; i < l; i++) {
-                            item = content[i];
-                            if (item !== false && item != null) {
-                                res += this.toHtml(item);
-                            }
-                        }
-                    } else {
-                        res += this.toHtml(content);
-                    }
-                }
-                res += '</' + tag + '>';
-            }
-            return res;
-        }
-    },
-
-    /**
-     * Инициализация BH.
-     */
-    _init: function() {
-        this._inited = true;
-        /*
-            Копируем ссылку на BEM.I18N в bh.lib.i18n, если это возможно.
-        */
-        if (typeof BEM !== 'undefined' && typeof BEM.I18N !== 'undefined') {
-            this.lib.i18n = this.lib.i18n || BEM.I18N;
+            appendHtmlTag(this, json, cls, attrs);
         }
     }
+};
+
+var SHORT_TAGS = 'area base br col command embed hr img input keygen link menuitem meta param source track wbr'.split(' ');
+
+/**
+ * Preserves a value as text in HTML by replacing characters that HTML treats as
+ * the beginning of an entity or markup with their corresponding entities.
+ * @param {*} str
+ * @returns {String}
+ */
+var xmlEscape = BH.prototype.xmlEscape = function(str) {
+    return (str + '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 };
 
 /**
- * @deprecated
+ * Preserves a value inside a double-quoted HTML attribute by replacing
+ * characters that begin an entity or terminate the attribute.
+ * @param {*} str
+ * @returns {String}
  */
-BH.prototype.processBemjson = BH.prototype.processBemJson;
-
-var selfCloseHtmlTags = {
-    area: 1,
-    base: 1,
-    br: 1,
-    col: 1,
-    command: 1,
-    embed: 1,
-    hr: 1,
-    img: 1,
-    input: 1,
-    keygen: 1,
-    link: 1,
-    menuitem: 1,
-    meta: 1,
-    param: 1,
-    source: 1,
-    track: 1,
-    wbr: 1
+var attrEscape = BH.prototype.attrEscape = function(str) {
+    return (str + '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 };
 
-var buildEscape = (function() {
-    var ts = { '"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;' },
-        f = function(t) {
-            return ts[t] || t;
-        };
-    return function(r) {
-        r = new RegExp(r, 'g');
-        return function(s) {
-            return ('' + s).replace(r, f);
-        };
-    };
-})();
-
-var xmlEscape = BH.prototype.xmlEscape = buildEscape('[&<>]');
-var attrEscape = BH.prototype.attrEscape = buildEscape('["&<>]');
-var strEscape = function(str) {
-    str += '';
-    if (~str.indexOf('\\')) {
-        str = str.replace(/\\/g, '\\\\');
-    }
-    if (~str.indexOf('"')) {
-        str = str.replace(/"/g, '\\"');
-    }
-    return str;
+/**
+ * Preserves serialized JavaScript parameters inside a single-quoted HTML
+ * attribute by replacing characters that begin an entity or terminate the
+ * attribute without changing the source JSON structure.
+ * @param {*} str
+ * @returns {String}
+ */
+var jsAttrEscape = BH.prototype.jsAttrEscape = function(str) {
+    return (str + '').replace(/&/g, '&amp;').replace(/'/g, '&#39;');
 };
 
-var toBemCssClasses = function(json, blockName) {
-    var mods, mod, res,
-        base = (json.block || blockName) + (json.elem ? '__' + json.elem : ''),
-        mix, i, l;
+/**
+ * Builds CSS classes for a block or element and its modifiers. The renderer uses
+ * this helper for the main BEMJSON node and its mixes; it is intentionally not
+ * part of the public API.
+ * @param {Object} json
+ * @param {String} base
+ * @param {String} parentBase
+ * @param {Boolean} nobase
+ * @param {String} delimMod
+ * @returns {String}
+ */
+var toBemCssClasses = function(json, base, parentBase, nobase, delimMod) {
+    var mods, mod, res = '', i;
 
-    res = (base === blockName) ? '' : base;
-    if (mods = json.mods || json.elem && json.elemMods) {
+    if (parentBase !== base) {
+        if (parentBase) res += ' ';
+        res += base;
+    }
+
+    if (mods = json.elem && json.elemMods || json.mods) {
         for (i in mods) {
-            if (mod = mods[i]) {
-                res += (res ? ' ' : '') + base + '_' + i + (mod === true ? '' : '_' + mod);
+            mod = mods[i];
+            if (mod || mod === 0) {
+                res += ' ' + (nobase ? delimMod : base + delimMod) + i + (mod === true ? '' : delimMod + mod);
             }
-        }
-    }
-    if ((mix = json.mix) && (l = mix.length)) {
-        for (i = 0; i < l; i++) {
-            if (!mix[i]) continue;
-            res += ' ' + toBemCssClasses(mix[i], mix[i].elem ? json.block || blockName : base);
         }
     }
     return res;
@@ -1052,6 +1304,7 @@ var toBemCssClasses = function(json, blockName) {
 return BH;
 })();
 
+/* istanbul ignore else */
 if (typeof module !== 'undefined') {
     module.exports = BH;
 }
