@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.2.2
+- Improved project guidance and API documentation.
+- Refactored BEMJSON processing, matcher generation, and HTML rendering without
+  changing public behavior.
+- Added focused regression coverage and clearer behavioral test descriptions.
+
 ## 4.2.1
 - BH prototype points to BH (#176).
 
