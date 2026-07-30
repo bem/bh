@@ -7,7 +7,7 @@ describe('bh.match()', function() {
         bh = new BH();
     });
 
-    it('should not create invalid matcher', function() {
+    it('should ignore a falsy matcher expression', function() {
         bh.match(false, function() {});
         bh.apply('').should.equal('');
     });
@@ -28,7 +28,7 @@ describe('bh.match()', function() {
         }).should.equal('<div class="button button_disabled"><input class="button__control"/></div>');
     });
 
-    it('should allow to use a few matchers in one call #1', function() {
+    it('should register an object map of matcher expressions', function() {
         bh.match({
             button: function(ctx) {
                 ctx.tag('button');
@@ -43,7 +43,7 @@ describe('bh.match()', function() {
         );
     });
 
-    it('should allow to use a few matchers in one call #2', function() {
+    it('should register an array of matcher expressions', function() {
         bh.match(
             [
                 'item__mark',

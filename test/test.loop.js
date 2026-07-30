@@ -7,7 +7,7 @@ describe('loop', function() {
         bh = new BH();
         bh.enableInfiniteLoopDetection(true);
     });
-    it('should throw an error on json loop detection', function(done) {
+    it('should reject recursively nested references to the same BEMJSON node', function(done) {
         var button = { block: 'button' };
         bh.match('button', function(ctx) {
             ctx.content(button);
@@ -19,7 +19,7 @@ describe('loop', function() {
             done();
         }
     });
-    it('should throw an error on matcher loop detection', function(done) {
+    it('should reject an endless chain of newly created matcher nodes', function(done) {
         bh.match('input', function(ctx) {
             ctx.content({ block: 'button' });
         });

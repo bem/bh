@@ -50,7 +50,7 @@ describe('ctx.js()', function() {
         bh.apply({ block: 'button', js: true }).should.equal('<div class="button i-bem" onclick=\'return {"button":{"a":1}}\'></div>');
     });
 
-    it('should not override later declarations #1', function() {
+    it('should preserve a true value from a later declaration', function() {
         bh.match('button', function(ctx) {
             ctx.js(false);
         });
@@ -60,7 +60,7 @@ describe('ctx.js()', function() {
         bh.apply({ block: 'button' }).should.equal('<div class="button i-bem" onclick=\'return {"button":{}}\'></div>');
     });
 
-    it('should not override later declarations #2', function() {
+    it('should preserve a false value from a later declaration', function() {
         bh.match('button', function(ctx) {
             ctx.js(true);
         });

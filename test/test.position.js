@@ -6,7 +6,7 @@ describe('ctx.position()', function() {
     beforeEach(function() {
         bh = new BH();
     });
-    it('should calc position', function() {
+    it('should calculate positions for sibling elements', function() {
         bh.match('button__inner', function(ctx) {
             ctx.mod('pos', ctx.position());
         });
@@ -21,7 +21,7 @@ describe('ctx.position()', function() {
             '</div>'
         );
     });
-    it('should calc position with array mess', function() {
+    it('should calculate positions after flattening nested arrays', function() {
         bh.match('button__inner', function(ctx) {
             ctx.mod('pos', ctx.position());
         });
@@ -39,7 +39,7 @@ describe('ctx.position()', function() {
             '</div>'
         );
     });
-    it('should calc position for single element', function() {
+    it('should return the first position for a single content element', function() {
         bh.match('button__inner', function(ctx) {
             ctx.mod('pos', ctx.position());
         });
