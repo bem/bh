@@ -18,7 +18,7 @@ describe('options', function() {
         bh.apply({ tag: 'rect' }).should.equal('<rect/>');
     });
 
-    it('shoud not render trailing slash for short tags', function() {
+    it('should not render trailing slash for short tags', function() {
         bh.setOptions({ xhtml: false });
         bh.apply({ tag: 'br' }).should.equal('<br>');
     });

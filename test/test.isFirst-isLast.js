@@ -7,7 +7,7 @@ describe('ctx.isFirst() / ctx.isLast()', function() {
         bh = new BH();
     });
 
-    it('should calc isFirst/isLast', function() {
+    it('should identify the first and last sibling elements', function() {
         bh.match('button__inner', function(ctx) {
             if (ctx.isFirst()) {
                 ctx.mod('first', 'yes');
@@ -28,7 +28,7 @@ describe('ctx.isFirst() / ctx.isLast()', function() {
         );
     });
 
-    it('should calc isFirst/isLast with array mess', function() {
+    it('should identify boundaries after flattening nested arrays', function() {
         bh.match('button__inner', function(ctx) {
             if (ctx.isFirst()) {
                 ctx.mod('first', 'yes');
@@ -52,7 +52,7 @@ describe('ctx.isFirst() / ctx.isLast()', function() {
         );
     });
 
-    it('should calc isFirst/isLast for single element', function() {
+    it('should identify a single element as both first and last', function() {
         bh.match('button__inner', function(ctx) {
             if (ctx.isFirst()) {
                 ctx.mod('first', 'yes');
