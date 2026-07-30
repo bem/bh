@@ -1,4 +1,4 @@
 /**
- * Экспортируем только BH.
+ * Export only BH.
  */
 exports.BH = require('./lib/bh');

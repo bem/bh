@@ -13,7 +13,8 @@ with ES5 syntax.
   renderer.
 - `test/` contains the Mocha behavioral test suite. Test files are grouped by
   the public method or context helper they specify.
-- `README.md` and `README.ru.md` are the English and Russian user documentation.
+- `README.md` is the canonical user documentation. `README.ru.md` is its
+  automatically generated Russian translation and must not be edited directly.
 - `CONTRIBUTION.md` describes the contribution process.
 
 ## Development workflow
@@ -41,7 +42,11 @@ Install the pinned development dependencies with `npm install`.
   detection.
 - Add or update a focused test in `test/` for every behavior change. Test names
   should state the observable outcome.
-- Keep the English and Russian READMEs synchronized when user-facing behavior or
-  examples change.
+- Write all human-readable project text in English. This includes source-code
+  comments and JSDoc, documentation, test names and messages, changelog entries,
+  commit messages, branch names, and pull request titles and descriptions.
+- The only language exception is the generated `README.ru.md`. Update
+  `README.md` first, then regenerate the Russian translation when user-facing
+  behavior or examples change.
 - Follow the existing four-space indentation and single-quote style. The full
   validation suite is the source of truth for lint and formatting rules.

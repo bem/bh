@@ -1,4 +1,8 @@
 # BH
+
+This English README is the canonical documentation. The
+[Russian README](README.ru.md) is an automatically generated translation.
+
 [![NPM version](https://img.shields.io/npm/v/bh.svg)](http://www.npmjs.org/package/bem-xjst)
 [![Build Status](https://img.shields.io/travis/bem/bh/master.svg)](https://travis-ci.org/bem/bh)
 [![Gemnasium](https://img.shields.io/gemnasium/bem/bh.svg)](https://gemnasium.com/bem/bh#development-dependencies)

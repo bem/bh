@@ -1,27 +1,30 @@
-Contribution Guide
-==================
+# Contribution Guide
 
-Этот документ описывает некоторые положения о совместной работе над проектом BH.
+This document describes the conventions for contributing to BH.
 
-Мейнтейнер проекта — Михаил Трошев (@mishanga).
+The project maintainer is Mikhail Troshev (@mishanga).
 
-Проект развивается с помощью сообщества. Мейнтейнер мерджит пулл-реквесты, исправляет особо критичные баги.
+BH is developed with help from the community. The maintainer reviews and merges
+pull requests and addresses especially critical bugs.
 
-Пулл-реквесты
--------------
+## Pull requests
 
-Если вы что-то исправили или добавили в пакет BH, вы можете отправить пулл-реквест. Он будет рассмотрен мейнтейнером и, либо принят, либо прокомментирован для дальнейшей доработки, либо отклонен.
+If you fix or add something in BH, please submit a pull request. The maintainer
+will review it and either accept it, request further changes, or reject it.
 
-Ошибки
-------
+## Bugs
 
-Если вы нашли ошибку, недоделку, опечатку и вообще любой дефект в BH, пожалуйста, сообщите об этом, используя github-issues.
-И да. Чем подробнее вы опишите ошибку, тем быстрее её смогут воспроизвести и исправить, и тем больше ментейнеры будут вам признательны :)
-К сожалению, неизбежны ситуации, когда ошибка будет воспроизводиться только на вашем проекте или в вашем серверном окружении, и ментейнер не сможет не только исправить, а даже воспроизвести её. В таких случаях, мы будем верить, вы сами сможете найти нужное исправление и со временем предложить ментейнеру фикс.
+Report bugs, omissions, typos, and other defects through GitHub Issues. Include
+enough detail to reproduce the problem; a clear reproduction makes it much
+easier to investigate and fix.
 
-Фичи
-----
+Some problems may only reproduce in a specific project or server environment.
+If the maintainer cannot reproduce such a problem, a pull request with a focused
+test and fix is especially welcome.
 
-Если вы придумали новую фичу, весьма вероятно, что её реализацию вам придётся писать самому. Но вы не постесняйтесь, спросите у ментейнеров имена разработчиков, которые хорошо разбираются в ENB — с ними можно скооперироваться, чтобы реализовать вашу задумку.
-Если вы не можете её реализовать сами и не смогли заинтересовать других крутых разработчиков, но фича невероятно крутая — заведите таск в Issues, что-нибудь придумаем.
-В крайнем случае объясним вам, что хотеть эту фичу вам не нужно. Или что с ней нужно повременить. Но это в крайнем случае :)
+## Features
+
+Feature proposals are welcome in GitHub Issues. A proposal is more likely to
+move forward when it explains the use case and includes an implementation plan.
+You can also ask the maintainers to identify contributors familiar with the
+relevant parts of BH or ENB and coordinate the work with them.

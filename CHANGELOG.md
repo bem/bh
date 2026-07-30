@@ -18,7 +18,7 @@
 ## 4.1.1
 - Some documentation fixes.
 - Added `shortTags` option (#149).
-- Added `delimElem` и `delimMod` options (#150).
+- Added `delimElem` and `delimMod` options (#150).
 
 ## 4.1.0
 - Ability to replace `toHtml` method for only node (#144).
