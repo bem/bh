@@ -15,6 +15,9 @@ describe('ctx.isSimple()', function() {
     it('should return true for string', function() {
         bh.utils.isSimple('1').should.equal(true);
     });
+    it('should return true for escaped string', function() {
+        bh.utils.isSimple({ tag: false, html: '42' }).should.equal(true);
+    });
     it('should return true for boolean', function() {
         bh.utils.isSimple(false).should.equal(true);
     });
